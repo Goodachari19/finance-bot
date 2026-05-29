@@ -1,0 +1,591 @@
+[
+  {
+    "id": "what-is-stock-market",
+    "title": "What is the Stock Market?",
+    "tags": [
+      "stock market",
+      "basics",
+      "beginner",
+      "exchange",
+      "shares",
+      "equity"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "The stock market is a marketplace where buyers and sellers trade shares of publicly listed companies. In India, the two main exchanges are the NSE (National Stock Exchange) and the BSE (Bombay Stock Exchange). When you buy a share, you become a part-owner of that company. Markets are open Monday–Friday, 9:15 AM to 3:30 PM IST. The market is regulated by SEBI (Securities and Exchange Board of India), which protects investor interests and ensures fair, transparent trading."
+  },
+  {
+    "id": "what-is-share",
+    "title": "What is a Share / Stock?",
+    "tags": [
+      "share",
+      "stock",
+      "equity",
+      "ownership"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "A share (also called a stock or equity) represents a unit of ownership in a company. If a company has issued 1,00,000 shares and you own 1,000, you own 1% of that company. As a shareholder, you benefit when profits grow (share price rises) and may receive dividends. You can buy or sell shares on the NSE or BSE through a registered broker or trading app like Zerodha, Groww, or Upstox."
+  },
+  {
+    "id": "nse-vs-bse",
+    "title": "NSE vs BSE — What is the Difference?",
+    "tags": [
+      "nse",
+      "bse",
+      "nifty",
+      "sensex",
+      "national stock exchange",
+      "bombay stock exchange"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "NSE (National Stock Exchange) was founded in 1992 and is India's largest stock exchange by trading volume. Its benchmark index is the Nifty 50, tracking the top 50 companies. BSE (Bombay Stock Exchange) is Asia's oldest exchange, founded in 1875. Its benchmark is the Sensex, tracking top 30 companies. Most large companies are listed on both exchanges. NSE generally has higher liquidity and is preferred by most active traders."
+  },
+  {
+    "id": "demat-account",
+    "title": "What is a Demat Account?",
+    "tags": [
+      "demat",
+      "demat account",
+      "how to invest",
+      "start investing",
+      "trading account"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "A Demat (Dematerialized) Account is a digital account that holds your shares electronically — like a bank account holds money. To start investing, you need a Demat account, a Trading account, and a linked bank account. Popular platforms: Zerodha, Groww, Upstox, HDFC Securities. Opening takes 1–3 business days and requires PAN card and Aadhaar."
+  },
+  {
+    "id": "bull-bear-market",
+    "title": "What is a Bull Market vs Bear Market?",
+    "tags": [
+      "bull market",
+      "bear market",
+      "bull",
+      "bear",
+      "market trend",
+      "rally",
+      "crash",
+      "correction"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "A Bull Market is when stock prices are rising or expected to rise. Investor confidence is high, economy is growing. A Bear Market is when prices fall by 20%+ from recent highs — driven by economic slowdown, fear, or crisis. Corrections (10–20% pullbacks) are normal and healthy. Bear markets are always temporary — the Nifty 50 has recovered from every crash in its history."
+  },
+  {
+    "id": "what-is-ipo",
+    "title": "What is an IPO?",
+    "tags": [
+      "ipo",
+      "initial public offering",
+      "listing",
+      "new stock",
+      "fresh issue"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "An IPO (Initial Public Offering) is when a private company offers shares to the public for the first time. IPOs can be lucrative if fundamentals are strong, but risky due to no trading history. In India, applications are via ASBA through your bank or broker. Shares are allotted via lottery if oversubscribed. Read the DRHP (Draft Red Herring Prospectus) before applying."
+  },
+  {
+    "id": "what-is-sip",
+    "title": "What is SIP (Systematic Investment Plan)?",
+    "tags": [
+      "sip",
+      "systematic investment plan",
+      "mutual fund",
+      "monthly investment",
+      "rupee cost averaging"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "A SIP is a method of investing a fixed amount in a mutual fund at regular intervals. It uses Rupee Cost Averaging — you buy more units when prices are low, fewer when high, reducing average cost over time. Even ₹500/month invested in a Nifty 50 index fund can grow significantly over 10–15 years through compounding."
+  },
+  {
+    "id": "what-is-dividend",
+    "title": "What is a Dividend?",
+    "tags": [
+      "dividend",
+      "dividend yield",
+      "payout",
+      "income",
+      "passive income",
+      "ex-date"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "A dividend is a portion of a company's profit paid to shareholders, quarterly or annually. Dividend Yield = Annual Dividend ÷ Current Price × 100. Yield >1–2% is decent for Indian stocks. Not all companies pay dividends — growth companies reinvest profits. Mature companies like ITC or NTPC typically pay regular dividends. You must own the share before the ex-dividend date to receive payment."
+  },
+  {
+    "id": "pe-ratio",
+    "title": "What is P/E Ratio?",
+    "tags": [
+      "pe ratio",
+      "p/e",
+      "price earnings",
+      "valuation",
+      "overvalued",
+      "undervalued"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "The P/E Ratio (Price-to-Earnings) tells you how much you pay for every ₹1 of earnings. Formula: Stock Price ÷ EPS. A P/E of 20 means paying ₹20 for ₹1 of profit. Lower P/E = potentially undervalued; Higher P/E = growth expectations or overvaluation. Always compare within the same sector. India's Nifty 50 average P/E is typically 18–25x historically."
+  },
+  {
+    "id": "market-cap",
+    "title": "What is Market Capitalisation?",
+    "tags": [
+      "market cap",
+      "market capitalisation",
+      "large cap",
+      "mid cap",
+      "small cap"
+    ],
+    "category": "fundamentals",
+    "level": "beginner",
+    "content": "Market Cap = Current Share Price × Total Shares Outstanding. In India: Large Cap = Market Cap >₹20,000 Cr (stable, lower risk); Mid Cap = ₹5,000–₹20,000 Cr (growth potential, moderate risk); Small Cap = <₹5,000 Cr (high growth potential, high risk). Large caps like Reliance, TCS, HDFC Bank are more stable. For beginners, large-cap stocks or Nifty 50 index funds are the safest starting point."
+  },
+  {
+    "id": "eps",
+    "title": "What is EPS (Earnings Per Share)?",
+    "tags": [
+      "eps",
+      "earnings per share",
+      "profit",
+      "earnings",
+      "quarterly results"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "EPS = Net Profit ÷ Total Shares Outstanding. Higher EPS = more profitable. Growing EPS year-over-year is one of the most reliable bullish signals. Trailing EPS is based on last 12 months actual results. Forward EPS is analyst estimate for next 12 months. If a company beats EPS estimates, stock often rallies; a miss can cause sharp falls. EPS is the denominator in the P/E ratio calculation."
+  },
+  {
+    "id": "roe",
+    "title": "What is ROE (Return on Equity)?",
+    "tags": [
+      "roe",
+      "return on equity",
+      "profitability",
+      "management efficiency",
+      "quality"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "ROE = Net Profit ÷ Shareholders' Equity × 100. Measures how efficiently a company uses shareholder money. >15% ROE is generally good for Indian companies. Consistently high ROE over 5+ years signals a quality business with competitive advantage. TCS, Infosys, HDFC Bank maintain ROE >20% consistently. Very high ROE can sometimes be inflated by high debt — always check D/E ratio alongside ROE."
+  },
+  {
+    "id": "debt-equity",
+    "title": "What is Debt-to-Equity Ratio?",
+    "tags": [
+      "debt equity",
+      "debt to equity",
+      "d/e",
+      "leverage",
+      "debt",
+      "financial risk",
+      "borrowing"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "Debt-to-Equity (D/E) = Total Debt ÷ Total Shareholders' Equity. D/E <1x is generally safe for non-financial companies. D/E >2x can signal financial stress during downturns when servicing debt becomes harder. Banks and NBFCs naturally have higher D/E and are evaluated differently. Low-debt companies have more flexibility to survive downturns and invest in growth."
+  },
+  {
+    "id": "pb-ratio",
+    "title": "What is P/B Ratio (Price-to-Book)?",
+    "tags": [
+      "pb ratio",
+      "p/b",
+      "price to book",
+      "book value",
+      "asset value",
+      "banking stocks"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "P/B Ratio = Stock Price ÷ Book Value Per Share. Book value is net assets after all liabilities. P/B of 1 means buying at exact asset value. For most quality Indian companies, P/B ranges 2x–6x. P/B is especially useful for banking stocks (HDFC Bank, ICICI Bank). Very low P/B (<1) can signal undervaluation or financial trouble. High P/B is only justified with very high ROE and growth."
+  },
+  {
+    "id": "promoter-holding",
+    "title": "What is Promoter Holding?",
+    "tags": [
+      "promoter",
+      "promoter holding",
+      "insider holding",
+      "pledge",
+      "pledged shares",
+      "shareholding pattern"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "Promoters are founders or controlling shareholders. High promoter holding (>50–60%) generally signals confidence. Decreasing promoter holding can be a warning sign. Pledged shares are dangerous: when promoters pledge shares as collateral for loans, falling stock prices can trigger forced selling, accelerating decline. Pledged % above 20–30% of promoter holdings deserves close scrutiny."
+  },
+  {
+    "id": "rsi",
+    "title": "What is RSI (Relative Strength Index)?",
+    "tags": [
+      "rsi",
+      "relative strength index",
+      "overbought",
+      "oversold",
+      "momentum",
+      "technical analysis"
+    ],
+    "category": "technicals",
+    "level": "intermediate",
+    "content": "RSI is a momentum indicator ranging 0–100. RSI <30: Stock may be oversold — potential buying opportunity. RSI >70: Stock may be overbought — potential sell signal. RSI 30–70: Neutral zone. RSI is calculated over 14 trading days by default. A stock can remain oversold or overbought for extended periods in strong trends. Use RSI alongside other indicators for confirmation."
+  },
+  {
+    "id": "ema",
+    "title": "What is EMA (Exponential Moving Average)?",
+    "tags": [
+      "ema",
+      "exponential moving average",
+      "moving average",
+      "sma",
+      "trend",
+      "golden cross"
+    ],
+    "category": "technicals",
+    "level": "intermediate",
+    "content": "EMA smooths price data giving more weight to recent prices. 20-Day EMA tracks short-term momentum; 50-Day EMA tracks medium-term trend. Price above EMA = bullish; below EMA = bearish. Golden Cross: 20-day EMA crosses above 50-day EMA — powerful bullish signal. Death Cross: 20-day EMA crosses below 50-day EMA — bearish warning. EMAs react faster to price changes than SMAs."
+  },
+  {
+    "id": "support-resistance",
+    "title": "What is Support and Resistance?",
+    "tags": [
+      "support",
+      "resistance",
+      "price level",
+      "breakout",
+      "breakdown",
+      "technical levels"
+    ],
+    "category": "technicals",
+    "level": "intermediate",
+    "content": "Support is a price level where a falling stock finds buyers (bounces off floor). Resistance is where a rising stock finds sellers (struggles to break ceiling). When a stock breaks through resistance with high volume, resistance becomes new support (breakout). When support breaks, it becomes new resistance (breakdown). The 52-week high and low are key support/resistance reference points."
+  },
+  {
+    "id": "volume",
+    "title": "How to Use Volume in Technical Analysis",
+    "tags": [
+      "volume",
+      "trading volume",
+      "average volume",
+      "high volume",
+      "confirmation"
+    ],
+    "category": "technicals",
+    "level": "intermediate",
+    "content": "Volume is shares traded in a given period — the most important confirmation tool in technical analysis. High volume + price rise = strong bullish conviction. Low volume + price rise = weak, potentially unsustainable move. High volume + price fall = strong bearish pressure. Compare today's volume to the 3-month average. An abnormally high volume day (3–5x average) deserves investigation."
+  },
+  {
+    "id": "nifty-50",
+    "title": "What is NIFTY 50?",
+    "tags": [
+      "nifty",
+      "nifty 50",
+      "index",
+      "benchmark",
+      "nse index",
+      "market index"
+    ],
+    "category": "india",
+    "level": "beginner",
+    "content": "NIFTY 50 is India's most widely tracked stock market index, representing the top 50 companies listed on NSE by free-float market capitalisation. It covers about 65% of India's total market cap across 13 sectors. Used as the benchmark for comparing portfolio performance. If your investments grow slower than NIFTY, you may be better off in an index fund. Rebalanced semi-annually."
+  },
+  {
+    "id": "sensex",
+    "title": "What is SENSEX?",
+    "tags": [
+      "sensex",
+      "bse index",
+      "30 companies",
+      "bombay stock exchange index"
+    ],
+    "category": "india",
+    "level": "beginner",
+    "content": "SENSEX (Sensitive Index) is the benchmark index of BSE, tracking the top 30 large financially sound companies listed in India. Launched in 1986, one of Asia's oldest indices. Moves in sync with NIFTY 99% of the time. Often used in mainstream media to report daily market performance. A single SENSEX point represents approximately ₹1 trillion in total market value."
+  },
+  {
+    "id": "sebi",
+    "title": "What is SEBI?",
+    "tags": [
+      "sebi",
+      "regulator",
+      "securities and exchange board",
+      "investor protection",
+      "regulation"
+    ],
+    "category": "india",
+    "level": "beginner",
+    "content": "SEBI (Securities and Exchange Board of India) is the regulatory authority for India's capital markets, established in 1992. Roles: protect investor interests from fraud and manipulation; regulate stock exchanges, brokers, mutual funds, listed companies; enforce disclosure norms (companies must publish quarterly results); investigate insider trading. Promoters must disclose all share transactions within 2 days."
+  },
+  {
+    "id": "fii-dii",
+    "title": "What is FII and DII?",
+    "tags": [
+      "fii",
+      "dii",
+      "foreign institutional investor",
+      "domestic institutional investor",
+      "institutional buying",
+      "fund flows"
+    ],
+    "category": "india",
+    "level": "intermediate",
+    "content": "FIIs (Foreign Institutional Investors) are large international funds — hedge funds, pension funds, sovereign wealth funds — investing in Indian markets. DIIs (Domestic Institutional Investors) include Indian mutual funds, insurance companies, banks. When FIIs sell heavily, markets often fall. DIIs often act as counterbalance — when FIIs sell, DIIs typically buy, limiting downside. Watch daily FII/DII data to understand market momentum drivers."
+  },
+  {
+    "id": "stcg-ltcg",
+    "title": "Tax on Stock Market Gains (STCG vs LTCG)",
+    "tags": [
+      "tax",
+      "stcg",
+      "ltcg",
+      "short term capital gains",
+      "long term capital gains",
+      "capital gains tax"
+    ],
+    "category": "india",
+    "level": "intermediate",
+    "content": "In India, profits from stock sales are taxed as Capital Gains. STCG (Short-Term Capital Gains): If you sell within 12 months — taxed at 20% (Budget 2024). LTCG (Long-Term Capital Gains): After 12 months — gains above ₹1.25 lakh/year taxed at 12.5%. STT (Securities Transaction Tax) is automatically deducted on every trade. Holding stocks 12+ months reduces tax burden significantly. Losses can offset gains."
+  },
+  {
+    "id": "circuit-breaker",
+    "title": "What are Circuit Breakers?",
+    "tags": [
+      "circuit breaker",
+      "upper circuit",
+      "lower circuit",
+      "halt",
+      "trading halt",
+      "price band"
+    ],
+    "category": "india",
+    "level": "intermediate",
+    "content": "Circuit breakers are automatic trading halts triggered by extreme price moves. Stock-level: price bands of 5%, 10%, or 20%; if hit, trading halts for the session. Upper Circuit = stock can't go higher; Lower Circuit = can't go lower for the day. Index-level: Nifty falls 10% → 45-minute halt; 15% → 1 hour 45 minutes halt; 20% → market closed for the rest of the day."
+  },
+  {
+    "id": "options-basics",
+    "title": "What are Options?",
+    "tags": [
+      "options",
+      "call option",
+      "put option",
+      "derivatives",
+      "f&o",
+      "futures and options",
+      "strike price"
+    ],
+    "category": "advanced",
+    "level": "advanced",
+    "content": "An Option is a contract giving the buyer the right (but not obligation) to buy or sell a stock at a fixed price (strike price) before an expiry date. Call Option: right to buy — profits if stock rises. Put Option: right to sell — profits if stock falls. You pay a premium upfront — maximum loss if option expires worthless. Over 85–90% of retail options traders lose money. Learn thoroughly before trading F&O."
+  },
+  {
+    "id": "portfolio-diversification",
+    "title": "Portfolio Diversification",
+    "tags": [
+      "diversification",
+      "portfolio",
+      "allocation",
+      "risk management",
+      "sectors"
+    ],
+    "category": "advanced",
+    "level": "intermediate",
+    "content": "Diversification spreads investments across different assets, sectors, and companies to reduce risk. A well-diversified Indian equity portfolio: IT (TCS, Infosys), Banking (HDFC, ICICI), FMCG (HUL, ITC), Pharma (Sun Pharma), Energy (Reliance, NTPC). No single stock should exceed 10–15% of your portfolio. For true diversification, also consider gold, fixed income, and international ETFs."
+  },
+  {
+    "id": "dcf-valuation",
+    "title": "What is DCF Valuation?",
+    "tags": [
+      "dcf",
+      "discounted cash flow",
+      "intrinsic value",
+      "valuation method",
+      "fair value"
+    ],
+    "category": "advanced",
+    "level": "advanced",
+    "content": "DCF (Discounted Cash Flow) estimates a company's intrinsic value based on projected future cash flows, discounted to today's value. If DCF intrinsic value > current market price, the stock may be undervalued. If DCF value < market price, it may be overvalued. DCF is highly sensitive to assumptions about growth rates and discount rates. Warren Buffett's 'margin of safety': buy significantly below DCF value."
+  },
+  {
+    "id": "compounding",
+    "title": "The Power of Compounding",
+    "tags": [
+      "compounding",
+      "compound interest",
+      "power of compounding",
+      "long term",
+      "cagr",
+      "wealth creation"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "Compounding is earning returns on your returns — the most powerful force in investing. Example: ₹1 lakh at 15% annual returns: After 10 years → ₹4 lakh; After 20 years → ₹16 lakh; After 30 years → ₹66 lakh. Time is the key ingredient. The Nifty 50 has delivered approximately 12–15% CAGR over any 15+ year period. Start early, stay invested, avoid panic selling."
+  },
+  {
+    "id": "how-to-analyze-stock",
+    "title": "How Do I Analyze a Stock Before Buying?",
+    "tags": [
+      "analyze stock",
+      "research",
+      "buy",
+      "stock analysis",
+      "how to pick",
+      "checklist",
+      "invest"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "Before buying, run this checklist: (1) Business model: Do you understand how the company makes money? (2) Revenue & profit growth: Growing consistently over 3–5 years? (3) ROE: Consistently >15%? (4) Debt level: D/E manageable (<1 for non-banks)? (5) Promoter holding: >50% and not pledged? (6) Valuation: P/E reasonable vs. sector peers? (7) Key risks: What could go wrong? (8) Management quality: Have they delivered on past promises?"
+  },
+  {
+    "id": "risk-management",
+    "title": "Risk Management in Stock Investing",
+    "tags": [
+      "risk",
+      "risk management",
+      "stop loss",
+      "position sizing",
+      "capital preservation"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "Rule #1: Never lose more than you can afford. Key principles: (1) Position sizing: No more than 5–10% of portfolio in any single stock. (2) Stop-loss: Define exit before entering — e.g., sell if stock falls 15%. (3) Don't use borrowed money for long-term investing. (4) Keep 10–20% in cash for opportunities during corrections. (5) Emotional discipline: Never average down blindly. (6) Time in market beats timing the market."
+  },
+  {
+    "id": "long-term-investing",
+    "title": "Long-Term Investing — The Proven Strategy",
+    "tags": [
+      "long term",
+      "investing strategy",
+      "buy and hold",
+      "patience",
+      "wealth creation"
+    ],
+    "category": "strategy",
+    "level": "beginner",
+    "content": "Long-term investing (holding quality stocks for 5–10+ years) is statistically the most reliable strategy. Why it works: (1) Compounding amplifies returns; (2) You ride out short-term volatility; (3) Lower tax impact (LTCG 12.5% vs STCG 20%); (4) Avoids psychological traps of reacting to daily news. India's GDP projected at 6–7% growth annually for decades. Best for long-term: market leaders in banking, IT, FMCG with consistent 15%+ ROE."
+  },
+  {
+    "id": "blue-chip-stocks",
+    "title": "What are Blue Chip Stocks?",
+    "tags": [
+      "blue chip",
+      "large cap",
+      "quality stock",
+      "safe stock",
+      "index stock",
+      "nifty stock"
+    ],
+    "category": "strategy",
+    "level": "beginner",
+    "content": "Blue chip stocks are shares of large, well-established, financially sound companies with track records of reliable earnings, stable dividends, and consistent growth. In India: Reliance Industries, TCS, HDFC Bank, Infosys, HUL, L&T. Characteristics: Nifty 50/Sensex constituents, Market cap >₹50,000–1,00,000 Cr, 10+ years consistent profitability, strong brand recognition. Safest way to participate in India's long-term economic growth."
+  },
+  {
+    "id": "market-timing",
+    "title": "Is Market Timing Possible?",
+    "tags": [
+      "market timing",
+      "when to buy",
+      "when to sell",
+      "should i buy now",
+      "is it right time"
+    ],
+    "category": "fundamentals",
+    "level": "beginner",
+    "content": "No one can consistently and reliably time the market. Studies show that missing just the 10 best days over 20 years halves your returns compared to staying invested every day. Better strategy: Time in the market > Timing the market. Use SIP to invest regularly, have a solid emergency fund first, hold fundamentally strong stocks during short-term volatility. The right time to invest is almost always now, with a long enough horizon."
+  },
+  {
+    "id": "mutual-funds",
+    "title": "Mutual Funds vs Direct Stock Investing",
+    "tags": [
+      "mutual fund",
+      "direct stock",
+      "active fund",
+      "passive fund",
+      "index fund",
+      "nifty etf"
+    ],
+    "category": "basics",
+    "level": "beginner",
+    "content": "Mutual Funds pool money and a professional fund manager invests it. Active funds: manager picks stocks trying to beat index — but 70–80% underperform Nifty 50 over 10 years. Index funds/ETFs: mirror the Nifty 50 — lower cost, more tax-efficient, often outperform active funds long-term. For beginners: Nifty 50 Index Fund is the safest, lowest-cost way to gain broad market exposure."
+  },
+  {
+    "id": "sector-analysis",
+    "title": "Sector Analysis — Why Sectors Matter",
+    "tags": [
+      "sector",
+      "sector analysis",
+      "it sector",
+      "banking sector",
+      "fmcg",
+      "pharma",
+      "cyclical",
+      "defensive"
+    ],
+    "category": "fundamentals",
+    "level": "intermediate",
+    "content": "Different sectors behave differently in various economic conditions. Cyclical sectors (Autos, Real Estate, Metals) boom during expansion, crash during slowdowns. Defensive sectors (FMCG, Pharma, Utilities) are stable — people buy toothpaste and medicine regardless of economy. IT sector is tied to global technology spending and US/Europe demand. In India's growth phase, Banking, Infrastructure, and Capital Goods tend to be strong performers."
+  },
+  {
+    "id": "value-vs-growth-investing",
+    "title": "Value Investing vs Growth Investing",
+    "tags": [
+      "value investing",
+      "growth investing",
+      "warren buffett",
+      "growth stocks",
+      "value stocks",
+      "strategy"
+    ],
+    "category": "strategy",
+    "level": "intermediate",
+    "content": "Value Investing: Buying stocks below intrinsic value — finding cheap, undervalued companies. Pioneer: Benjamin Graham, Warren Buffett. Look for low P/E, high dividend yield, solid fundamentals at discounted prices. Growth Investing: Buying companies expected to grow revenues significantly faster than market, even at high valuations. Pioneer: Philip Fisher, Peter Lynch. Look for expanding TAM, strong management, double-digit revenue growth. Most successful investors use a hybrid approach."
+  },
+  {
+    "id": "pledged-shares-risk",
+    "title": "Why Are Pledged Promoter Shares Dangerous?",
+    "tags": [
+      "pledged shares",
+      "pledge",
+      "promoter pledge",
+      "margin call risk",
+      "forced selling"
+    ],
+    "category": "advanced",
+    "level": "advanced",
+    "content": "When promoters pledge shares as collateral for loans, falling stock prices reduce collateral value, triggering a margin call. If unable to repay, lender sells pledged shares in the open market, causing further price decline — a dangerous spiral: falling price → forced selling → more price fall. Pledged shares >30% of promoter holding is a major red flag. Always check the Shareholding Pattern section for pledged share data."
+  },
+  {
+    "id": "averaging-down",
+    "title": "Should I Average Down on a Falling Stock?",
+    "tags": [
+      "average down",
+      "averaging",
+      "buy more",
+      "falling stock",
+      "should i buy more",
+      "cost averaging"
+    ],
+    "category": "strategy",
+    "level": "intermediate",
+    "content": "Averaging down means buying more shares as price falls to lower your average cost. Only works if the stock falls due to temporary market sentiment, not fundamental problems. Ask yourself before averaging: Has the business changed? Are promoters selling? Are earnings declining? Did you fully research before the first buy? If answer is yes or 'I don't know' — do NOT average down blindly. Only add if you have fresh conviction the business is strong and the fall is unjustified."
+  },
+  {
+    "id": "read-annual-report",
+    "title": "How to Read a Company Annual Report",
+    "tags": [
+      "annual report",
+      "financials",
+      "balance sheet",
+      "profit loss",
+      "cash flow",
+      "results"
+    ],
+    "category": "advanced",
+    "level": "advanced",
+    "content": "Annual Report is the most complete source of truth about a company. Key sections: (1) MD&A: management explains performance and future strategy; (2) Profit & Loss Statement: revenue, expenses, net profit; (3) Balance Sheet: assets, liabilities, equity; (4) Cash Flow Statement: most important — cash from operations; (5) Auditor's Report: any qualifications or red flags; (6) Notes to Accounts: devil is in the details. Annual reports for NSE-listed companies are free on BSE/NSE websites."
+  }
+]

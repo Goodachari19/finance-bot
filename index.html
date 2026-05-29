@@ -1,0 +1,1692 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MarketPULSE — Live Indian Stock Market Intelligence | NSE &amp; BSE</title>
+  <meta name="description"
+    content="MarketPULSE — Real-time NSE &amp; BSE stock data, AI-powered analysis, live Nifty 50 &amp; Sensex tracking, paper trading simulator, and Indian financial news." />
+  <meta name="keywords" content="NSE, BSE, Nifty 50, Sensex, stock market India, paper trading, stock analysis, Indian stocks, MarketPULSE" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="MarketPULSE" />
+
+  <!-- Open Graph / Social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="MarketPULSE — Live Indian Stock Market Intelligence" />
+  <meta property="og:description" content="Real-time NSE &amp; BSE stock data, AI-powered analysis, paper trading simulator, and Indian financial news." />
+  <meta property="og:url" content="https://marketpulse.app" />
+
+  <!-- Favicon (emoji-based, no file needed) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📈</text></svg>" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=premium" />
+  <link rel="stylesheet" href="chatbot.css?v=premium" />
+  <link rel="stylesheet" href="trading-lab.css?v=premium" />
+  <link rel="stylesheet" href="investcircle.css?v=premium" />
+  <link rel="stylesheet" href="premium.css?v=premium2" />
+
+
+  <style>
+    /* ─── Market mood widget ─── */
+    .market-mood-widget {
+      display: flex; align-items: center; gap: 1rem;
+      background: linear-gradient(135deg,rgba(15,18,35,0.9),rgba(22,27,45,0.9));
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px; padding: 0.85rem 1.2rem;
+      margin-bottom: 1rem; backdrop-filter: blur(10px);
+    }
+    .mood-label { font-size:0.7rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:1px; color:#6e7681; white-space:nowrap; }
+    .mood-value { font-size:1rem; font-weight:800; flex:1; }
+    .mood-sub { font-size:0.68rem; color:#6e7681; white-space:nowrap; }
+
+    /* ─── Hot story banner ─── */
+    .news-card--hot {
+      border-color: rgba(244,63,94,0.4) !important;
+      background: linear-gradient(135deg,rgba(244,63,94,0.06),rgba(15,18,35,0.9)) !important;
+    }
+    .hot-banner {
+      font-size: 0.68rem; font-weight: 700; color: #f43f5e;
+      letter-spacing: 0.5px; text-transform: uppercase;
+      margin-bottom: 0.5rem; display: flex; align-items: center; gap: 4px;
+    }
+
+    /* ─── Sentiment pill ─── */
+    .news-sentiment-pill {
+      font-size: 0.65rem; font-weight: 700;
+      padding: 2px 8px; border-radius: 20px;
+      display: inline-flex; align-items: center; gap: 3px;
+    }
+
+    /* ─── Quick Take line ─── */
+    .news-quick-take {
+      font-size: 0.72rem; color: #8b949e;
+      margin: 0.4rem 0 0; padding: 0.45rem 0.7rem;
+      background: rgba(255,255,255,0.04); border-radius: 8px;
+      border-left: 2px solid rgba(124,140,248,0.4);
+      line-height: 1.5;
+    }
+
+    /* ─── Read button ─── */
+    .news-read-btn {
+      font-size: 0.72rem; font-weight: 700;
+      color: var(--accent-primary); text-decoration: none;
+      padding: 3px 10px; border-radius: 8px;
+      background: rgba(139, 92, 246, 0.09);
+      border: 1px solid rgba(139, 92, 246, 0.28);
+      transition: all .15s; white-space: nowrap;
+    }
+    .news-read-btn:hover {
+      background: rgba(139, 92, 246, 0.18);
+      border-color: rgba(139, 92, 246, 0.55);
+      color: #9d6ff7;
+    }
+
+    /* ─── Loading / error states ─── */
+    .news-loading-state, .news-error-state {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 3rem 2rem; text-align: center;
+      color: #6e7681;
+    }
+    .nl-spinner {
+      width: 36px; height: 36px; border: 3px solid rgba(124,140,248,0.2);
+      border-top-color: #7c8cf8; border-radius: 50%;
+      animation: spin .8s linear infinite; margin-bottom: 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .news-error-state h3 { color: #e6edf3; margin: 0 0 0.5rem; }
+    .news-error-state p { font-size: 0.82rem; margin: 0 0 1rem; }
+    .retry-btn {
+      background: rgba(124,140,248,0.15); color: #7c8cf8;
+      border: 1px solid rgba(124,140,248,0.3); border-radius: 8px;
+      padding: 0.5rem 1.2rem; font-size: 0.82rem; font-weight: 600;
+      cursor: pointer; transition: all .15s;
+    }
+    .retry-btn:hover { background: rgba(124,140,248,0.25); }
+    .news-empty {
+      padding: 2rem; text-align: center; color: #6e7681; font-size: 0.85rem;
+    }
+
+    /* ─── Refresh button ─── */
+    .news-refresh-btn {
+      background: rgba(255,255,255,0.05); color: #8b949e; margin-left: auto;
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 6px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; transition: all .2s; outline: none;
+    }
+    .news-refresh-btn:hover { background: rgba(124,140,248,0.15); color: #7c8cf8; border-color: rgba(124,140,248,0.3); }
+    .news-refresh-btn.spinning svg { animation: spin .8s linear infinite; }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── NAVBAR ── -->
+  <header class="navbar">
+    <div class="navbar-brand">
+      <div class="brand-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+          <polyline points="16 7 22 7 22 13"></polyline>
+        </svg>
+      </div>
+      <span class="brand-name">Market<span class="brand-accent">PULSE</span></span>
+    </div>
+    <div class="navbar-center">
+      <div class="market-ticker" id="marketTicker">
+        <div class="ticker-track" id="tickerTrack"></div>
+      </div>
+    </div>
+    <div class="navbar-right">
+      <div class="live-badge" id="globalLiveBadge">
+        <span class="live-dot" id="globalLiveDot"></span>
+        <span id="globalLiveText">LIVE FEED</span>
+      </div>
+      <div class="market-time" id="marketTime"></div>
+      <button class="profile-avatar" id="profileAvatarBtn" onclick="toggleProfile()" title="Profile & API Keys">
+        <span id="profileInitials">?</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── VIEW SWITCHER ── -->
+  <div class="top-nav-bar">
+    <div class="view-tabs">
+      <button class="view-tab active" id="tabMarkets" onclick="switchView('markets')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-1-1.73l-.43-.25a2 2 0 0 0-2 3.46l.43.25A2 2 0 0 0 4 22z" />
+          <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+        </svg>
+        Markets & Screener
+      </button>
+      <button class="view-tab" id="tabTradingLab" onclick="switchView('tradinglab')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="1" x2="12" y2="23"/>
+          <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+        TradeDesk
+      </button>
+      <button class="view-tab" id="tabInvestCircle" onclick="switchView('investcircle')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+          <circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </svg>
+        InvestCircle
+      </button>
+    </div>
+  </div>
+
+  <!-- ── MAIN LAYOUT ── -->
+  <main class="main-layout" id="mainLayout">
+
+    <!-- ════ LEFT COLUMN: TRENDING NEWS ════ -->
+    <section class="panel panel-news" id="panelNews" aria-label="Trending Financial News">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <h1 class="panel-title">
+            <span class="title-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path
+                  d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 0-1-1.73l-.43-.25a2 2 0 0 0-2 3.46l.43.25A2 2 0 0 0 4 22z" />
+                <path d="M8 2v4" />
+                <path d="M12 11h4" />
+                <path d="M12 16h4" />
+                <path d="M8 11h.01" />
+                <path d="M8 16h.01" />
+              </svg>
+            </span>
+            Market Wire
+          </h1>
+          <span class="panel-subtitle">Live Deal Flow · Auto-refreshes every 5 mins</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <!-- Sentiment Filters -->
+          <div class="filter-chips" id="newsFilters">
+            <button class="chip active" data-filter="all">📰 All News</button>
+            <button class="chip" data-filter="markets">📊 Equities</button>
+            <button class="chip" data-filter="economy">🏛 Macro</button>
+            <button class="chip" data-filter="tech">💡 Disruption</button>
+            <button class="chip" data-filter="crypto">🪙 Crypto</button>
+            <button class="chip" data-filter="ipo">🔥 IPO</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Market Mood Widget -->
+      <div id="marketMoodWidget" class="market-mood-widget">
+        <div class="mood-label">Dalal Street Sentiment</div>
+        <div class="mood-value" style="color:#d4a843">PRICING IN… ⏳</div>
+        <div class="mood-sub">Scanning breadth &amp; flow</div>
+      </div>
+
+      <div class="news-feed" id="newsFeed">
+        <!-- Injected by JS -->
+        <div class="skeleton-loader">
+          <div class="skeleton skeleton-tag"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-meta"></div>
+        </div>
+        <div class="skeleton-loader">
+          <div class="skeleton skeleton-tag"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-meta"></div>
+        </div>
+        <div class="skeleton-loader">
+          <div class="skeleton skeleton-tag"></div>
+          <div class="skeleton skeleton-title"></div>
+          <div class="skeleton skeleton-text"></div>
+          <div class="skeleton skeleton-meta"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ RIGHT COLUMN: STOCK SELECTOR ════ -->
+    <section class="panel panel-stock" id="panelStock" aria-label="Stock Analyzer">
+      <div class="panel-header">
+        <div class="panel-title-group">
+          <h2 class="panel-title">
+            <span class="title-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+              </svg>
+            </span>
+            Equity Screener
+          </h2>
+          <span class="panel-subtitle" style="display:flex; align-items:center; gap:0.8rem;">
+            Screen · Deep-Dive · Benchmark
+            <button class="update-db-btn" id="updateDbBtn" onclick="triggerDBRefresh()" title="Sync latest price action from Yahoo Finance" style="padding: 0.3rem 0.6rem; font-size: 0.7rem;">
+              <svg id="updateDbIcon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span id="updateDbLabel">Sync Prices</span>
+            </button>
+          </span>
+        </div>
+      </div>
+
+      <!-- Search Box -->
+      <div class="search-container">
+        <div class="search-box" id="searchBox">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input type="text" id="stockSearch" class="search-input"
+            placeholder="Scan NSE/BSE equity (e.g. Reliance, TCS, HDFC Bank…)" autocomplete="off"
+            aria-label="Search for an NSE or BSE listed equity" />
+          <button class="search-clear" id="searchClear" aria-label="Clear search" style="display:none">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </div>
+        <!-- Dropdown -->
+        <div class="search-dropdown" id="searchDropdown"></div>
+      </div>
+
+      <!-- Quick picks -->
+      <div class="quick-picks">
+        <span class="quick-label">Popular:</span>
+        <div class="quick-chips" id="quickChips">
+          <button class="quick-chip" data-ticker="RELIANCE">RELIANCE</button>
+          <button class="quick-chip" data-ticker="TCS">TCS</button>
+          <button class="quick-chip" data-ticker="HDFCBANK">HDFCBANK</button>
+          <button class="quick-chip" data-ticker="INFY">INFY</button>
+          <button class="quick-chip" data-ticker="SBIN">SBIN</button>
+          <button class="quick-chip" data-ticker="ICICIBANK">ICICIBANK</button>
+          <button class="quick-chip" data-ticker="TATAMOTORS">TATAMOTORS</button>
+          <button class="quick-chip" data-ticker="ITC">ITC</button>
+          <button class="quick-chip" data-ticker="ZOMATO">ZOMATO</button>
+          <button class="quick-chip" data-ticker="MARUTI">MARUTI</button>
+        </div>
+      </div>
+
+      <!-- ── NSE Market Status Banner ── -->
+      <div id="marketStatusBanner" class="mkt-status-banner"></div>
+
+      <!-- Stock Detail Card -->
+      <div class="stock-detail" id="stockDetail">
+        <!-- Default empty state -->
+        <div class="empty-state" id="emptyState">
+          <div class="market-dashboard">
+            <h3 class="dashboard-title">Live Market Overview</h3>
+            <div class="dashboard-grid" id="marketDashboardGrid">
+              <!-- Dynamically populated via app.js -->
+              <div class="dash-section">
+                <h4 class="dash-section-title">🚀 Top Gainers</h4>
+                <div class="movers-col" id="topGainersList"></div>
+              </div>
+
+              <div class="dash-section">
+                <h4 class="dash-section-title">🔻 Top Losers</h4>
+                <div class="movers-col" id="topLosersList"></div>
+              </div>
+
+              <div class="dash-section sector-snapshot-col">
+                <h4 class="dash-section-title">📊 Sector Snapshot</h4>
+                <div class="sector-list" id="sectorHeatmapList"></div>
+              </div>
+            </div>
+            
+            <div class="dashboard-footer">
+               <div class="feature-hilight">
+                 <span class="feature-icon">✨</span>
+                 <p>Search any stock above to unlock deep AI-powered Fundamental, Technical, and Sentiment research.</p>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stock Info (hidden until selection) -->
+        <div class="stock-card" id="stockCard" style="display:none">
+
+          <!-- ── TOOLTIP & BUTTON STYLES (scoped) ─────────────────────── -->
+          <style>
+            .back-to-dash-btn {
+              display: inline-flex; align-items: center; gap: 0.4rem;
+              background: transparent; border: 1px solid rgba(255,255,255,0.1);
+              color: var(--text-muted); font-size: 0.75rem; font-weight: 600;
+              padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer;
+              margin-bottom: 1rem; transition: all 0.2s;
+            }
+            .back-to-dash-btn:hover {
+              background: rgba(139, 92, 246, 0.1); border-color: var(--accent-primary);
+              color: var(--text-primary);
+            }
+            .sa-tooltip { position: relative; display: inline-block; }
+            .sa-tooltip .sa-tip {
+              visibility: hidden; opacity: 0;
+              background: rgba(10,14,28,0.97); color: #c9d1d9;
+              font-size: 0.72rem; line-height: 1.5;
+              border: 1px solid rgba(255,255,255,0.1);
+              border-radius: 8px; padding: 0.5rem 0.7rem;
+              width: 200px; position: absolute; z-index: 999;
+              bottom: 130%; left: 50%; transform: translateX(-50%);
+              transition: opacity .2s; pointer-events: none;
+              backdrop-filter: blur(12px);
+            }
+            .sa-tooltip:hover .sa-tip { visibility: visible; opacity: 1; }
+            .sa-tip::after {
+              content: ''; position: absolute; top: 100%; left: 50%;
+              transform: translateX(-50%); border: 5px solid transparent;
+              border-top-color: rgba(255,255,255,0.1);
+            }
+            /* ── Stock Header ── */
+            .sa-header {
+              display: flex; align-items: center; justify-content: space-between;
+              background: linear-gradient(135deg, rgba(30,34,55,0.8), rgba(15,18,35,0.9));
+              border: 1px solid rgba(255,255,255,0.07); border-radius: 16px;
+              padding: 1.2rem 1.4rem; gap: 1rem;
+              backdrop-filter: blur(12px);
+            }
+            .sa-logo { font-size: 2rem; width: 52px; height: 52px; display: flex;
+              align-items: center; justify-content: center;
+              background: rgba(255,255,255,0.05); border-radius: 12px;
+              border: 1px solid rgba(255,255,255,0.08); flex-shrink: 0;
+            }
+            .sa-identity { flex: 1; min-width: 0; }
+            .sa-ticker { font-size: 1.1rem; font-weight: 700; color: #7c8cf8;
+              letter-spacing: 0.5px; }
+            .sa-name { font-size: 0.9rem; color: #e6edf3; font-weight: 500;
+              white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+            .sa-exchange { font-size: 0.72rem; color: #6e7681; margin-top: 2px; }
+            .sa-price-block { text-align: right; flex-shrink: 0; }
+            .sa-price { font-size: 1.6rem; font-weight: 800;
+              background: linear-gradient(90deg, #e6edf3, #fff);
+              -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+            .sa-change { font-size: 0.85rem; font-weight: 600; margin-top: 2px; }
+            .sa-change.up { color: #00d68f; } .sa-change.down { color: #ff6b6b; }
+
+            /* ── Section Label ── */
+            .sa-section-label {
+              display: flex; align-items: center; gap: 0.5rem;
+              font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+              letter-spacing: 1px; color: #6e7681; margin-bottom: 0.7rem;
+            }
+            .sa-section-label svg { opacity: 0.7; }
+
+            /* ── Stats Grid ── */
+            .sa-stats-grid {
+              display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.65rem;
+            }
+            .sa-stat {
+              background: rgba(22,27,42,0.7); border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 12px; padding: 0.85rem 1rem;
+              transition: border-color .2s, transform .2s;
+              cursor: default;
+            }
+            .sa-stat:hover { border-color: rgba(124,140,248,0.3); transform: translateY(-1px); }
+            .sa-stat-label {
+              font-size: 0.68rem; font-weight: 600; text-transform: uppercase;
+              letter-spacing: 0.6px; color: #6e7681; margin-bottom: 0.3rem;
+              display: flex; align-items: center; gap: 4px;
+            }
+            .sa-stat-label .info-icon {
+              width: 13px; height: 13px; border-radius: 50%;
+              background: rgba(255,255,255,0.08); color: #8b949e;
+              font-size: 0.62rem; display: inline-flex; align-items: center;
+              justify-content: center; cursor: help; flex-shrink: 0;
+            }
+            .sa-stat-value { font-size: 1rem; font-weight: 700; color: #e6edf3; }
+
+            /* ── Fundamentals ── */
+            .sa-fundamentals {
+              background: rgba(0,214,143,0.04);
+              border: 1px dashed rgba(0,214,143,0.25);
+              border-radius: 14px; padding: 1.1rem;
+            }
+            .sa-fund-grid {
+              display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.7rem;
+            }
+            .sa-fund-item {
+              display: flex; flex-direction: column; align-items: center;
+              text-align: center; padding: 0.6rem 0.3rem;
+              background: rgba(0,0,0,0.2); border-radius: 10px;
+              border: 1px solid rgba(255,255,255,0.04);
+              transition: border-color .2s;
+            }
+            .sa-fund-item:hover { border-color: rgba(0,214,143,0.2); }
+            .sa-fund-label {
+              font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+              letter-spacing: 0.5px; color: #6e7681; margin-bottom: 0.35rem;
+              display: flex; align-items: center; gap: 3px;
+            }
+            .sa-fund-value { font-size: 0.95rem; font-weight: 700; }
+            .sa-fund-desc {
+              font-size: 0.6rem; color: #6e7681; margin-top: 0.2rem; line-height: 1.3;
+            }
+            .sa-legend {
+              display: flex; gap: 0.8rem; margin-top: 0.7rem;
+              padding-top: 0.7rem; border-top: 1px solid rgba(255,255,255,0.05);
+            }
+            .sa-legend-item { display: flex; align-items: center; gap: 4px;
+              font-size: 0.65rem; color: #6e7681; }
+            .sa-legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+            /* ── Chart ── */
+            .sa-chart-card {
+              background: rgba(15,18,35,0.7); border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 14px; overflow: hidden;
+            }
+            .sa-chart-header {
+              display: flex; align-items: center; justify-content: space-between;
+              padding: 0.9rem 1.1rem 0.5rem;
+            }
+            .sa-chart-title { font-size: 0.8rem; font-weight: 600; color: #8b949e; }
+            .sa-chart-tabs { display: flex; gap: 4px; }
+            .sa-chart-tab {
+              font-size: 0.7rem; font-weight: 600; padding: 3px 10px;
+              border-radius: 6px; border: 1px solid rgba(255,255,255,0.08);
+              background: transparent; color: #6e7681; cursor: pointer;
+              transition: all .15s;
+            }
+            .sa-chart-tab.active, .sa-chart-tab:hover {
+              background: rgba(124,140,248,0.15); border-color: rgba(124,140,248,0.4);
+              color: #7c8cf8;
+            }
+            .sa-chart-canvas { padding: 0 0.5rem 0.5rem; }
+
+            /* ── Technicals ── */
+            .sa-tech-card {
+              background: rgba(15,18,35,0.7); border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 14px; padding: 1.1rem;
+            }
+            .sa-tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem; }
+            .sa-tech-item {
+              background: rgba(4,6,16,0.5); border: 1px solid rgba(255,255,255,0.04);
+              border-radius: 10px; padding: 0.9rem; text-align: center;
+              transition: border-color .2s;
+            }
+            .sa-tech-item:hover { border-color: rgba(124,140,248,0.2); }
+            .sa-tech-name {
+              font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
+              letter-spacing: 0.5px; color: #6e7681; margin-bottom: 0.35rem;
+            }
+            .sa-tech-detail { font-size: 0.62rem; color: #555e6b; margin-top: 0.2rem; line-height: 1.4; }
+
+            /* ── Sentiment ── */
+            .sa-sentiment-card {
+              background: rgba(15,18,35,0.7); border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 14px; padding: 1rem 1.2rem;
+            }
+
+            /* ── About ── */
+            .sa-about-card {
+              background: rgba(22,27,42,0.5); border: 1px solid rgba(255,255,255,0.05);
+              border-radius: 14px; padding: 1rem 1.2rem;
+            }
+            .sa-about-card h4 { margin: 0 0 0.5rem; font-size: 0.75rem;
+              font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #6e7681; }
+            .sa-about-card p { margin: 0; font-size: 0.82rem; color: #8b949e; line-height: 1.6; }
+
+            /* ── Action Buttons ── */
+            .sa-actions {
+              display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;
+            }
+            .sa-btn {
+              display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+              padding: 0.85rem 1rem; border-radius: 12px; border: none;
+              font-size: 0.9rem; font-weight: 700; cursor: pointer;
+              transition: all .2s; letter-spacing: 0.3px;
+            }
+            .sa-btn-analyze {
+              background: linear-gradient(135deg, #5c6ef5, #7c8cf8);
+              color: #fff; box-shadow: 0 4px 20px rgba(92,110,245,0.3);
+            }
+            .sa-btn-analyze:hover {
+              transform: translateY(-2px); box-shadow: 0 8px 28px rgba(92,110,245,0.45);
+            }
+            .sa-btn-research {
+              background: linear-gradient(135deg, #059669, #00d68f);
+              color: #fff; box-shadow: 0 4px 20px rgba(0,214,143,0.2);
+            }
+            .sa-btn-research:hover {
+              transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,214,143,0.35);
+            }
+            .sa-model-row {
+              display: flex; align-items: center; gap: 0.7rem;
+              background: rgba(15,18,35,0.7); border: 1px solid rgba(255,255,255,0.06);
+              border-radius: 12px; padding: 0.7rem 1rem;
+            }
+            .sa-model-row label { font-size: 0.75rem; color: #6e7681; font-weight: 600;
+              white-space: nowrap; }
+            .sa-model-row select {
+              flex: 1; background: transparent; border: none;
+              color: #e6edf3; font-size: 0.82rem; outline: none; cursor: pointer;
+            }
+          </style>
+          
+          <button class="back-to-dash-btn" onclick="closeDeepDive()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Dashboard
+          </button>
+
+          <!-- ═══ REDESIGNED STOCK HEADER ═══ -->
+          <div class="sa-header">
+            <div class="sa-logo" id="stockLogo"></div>
+            <div class="sa-identity">
+              <div class="sa-ticker" id="stockTickerBadge"></div>
+              <div class="sa-name" id="stockFullName"></div>
+              <div class="sa-exchange" id="stockExchange"></div>
+            </div>
+            <div class="sa-price-block">
+              <div class="sa-price" id="stockPrice"></div>
+              <div class="sa-change" id="stockChange"></div>
+            </div>
+          </div>
+
+          <!-- ═══ MARKET SNAPSHOT ═══ -->
+          <div style="margin-top:1rem">
+            <div class="sa-section-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+              Market Snapshot
+            </div>
+            <div class="sa-stats-grid">
+              <div class="sa-stat sa-tooltip">
+                <div class="sa-stat-label">Market Cap <span class="info-icon">?</span></div>
+                <div class="sa-stat-value" id="statMarketCap">—</div>
+                <div class="sa-tip">Total market value of all outstanding shares. Large-cap (>₹20,000 Cr) = stable; Mid-cap = growth potential; Small-cap = high risk/reward.</div>
+              </div>
+              <div class="sa-stat sa-tooltip">
+                <div class="sa-stat-label">P/E Ratio <span class="info-icon">?</span></div>
+                <div class="sa-stat-value" id="statPE">—</div>
+                <div class="sa-tip">Price-to-Earnings: how much you pay per ₹1 of profit. Lower P/E can mean undervalued. Compare within the same sector.</div>
+              </div>
+              <div class="sa-stat sa-tooltip">
+                <div class="sa-stat-label">52W High <span class="info-icon">?</span></div>
+                <div class="sa-stat-value text-green" id="stat52H">—</div>
+                <div class="sa-tip">The highest price the stock reached in the past 52 weeks. If price is near this level, the stock may face resistance.</div>
+              </div>
+              <div class="sa-stat sa-tooltip">
+                <div class="sa-stat-label">52W Low <span class="info-icon">?</span></div>
+                <div class="sa-stat-value text-red" id="stat52L">—</div>
+                <div class="sa-tip">The lowest price in the past 52 weeks. If the stock is bouncing off this level, it may indicate a buying opportunity.</div>
+              </div>
+              <div class="sa-stat sa-tooltip">
+                <div class="sa-stat-label">Volume <span class="info-icon">?</span></div>
+                <div class="sa-stat-value" id="statVol">—</div>
+                <div class="sa-tip">Number of shares traded today. High volume confirms strong price moves. Low volume = weak conviction in the trend.</div>
+              </div>
+              <div class="sa-stat sa-tooltip">
+                <div class="sa-stat-label">Avg Volume <span class="info-icon">?</span></div>
+                <div class="sa-stat-value" id="statAvgVol">—</div>
+                <div class="sa-tip">3-month average daily volume. Compare today's volume against this to spot unusual activity or momentum building.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ INVESTOR DEEP DIVE ═══ -->
+          <div style="margin-top:1.2rem">
+            <div class="sa-section-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00d68f" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              <span style="color:#00d68f">Investor Deep Dive</span>
+              <span style="font-size:0.65rem; color:#6e7681; font-weight:400; text-transform:none; letter-spacing:0; margin-left:auto">Hover metrics for guidance</span>
+            </div>
+            <div class="sa-fundamentals">
+              <div class="sa-fund-grid">
+                <div class="sa-fund-item sa-tooltip">
+                  <div class="sa-fund-label">Div Yield <span class="info-icon">?</span></div>
+                  <div class="sa-fund-value" id="statDivYield">—</div>
+                  <div class="sa-fund-desc">Annual dividend as % of price</div>
+                  <div class="sa-tip">Dividend Yield = Annual Dividend ÷ Stock Price. &gt;1% is considered decent for Indian stocks. High yield can mean good income, but verify it's sustainable.</div>
+                </div>
+                <div class="sa-fund-item sa-tooltip">
+                  <div class="sa-fund-label">Trail EPS <span class="info-icon">?</span></div>
+                  <div class="sa-fund-value" id="statEPS">—</div>
+                  <div class="sa-fund-desc">Earnings per share (last 12m)</div>
+                  <div class="sa-tip">Trailing EPS = Net Profit ÷ Total Shares (last 4 quarters). Higher EPS = more profitable. Growing EPS year-over-year is a bullish signal.</div>
+                </div>
+                <div class="sa-fund-item sa-tooltip">
+                  <div class="sa-fund-label">ROE <span class="info-icon">?</span></div>
+                  <div class="sa-fund-value" id="statROE">—</div>
+                  <div class="sa-fund-desc">Return on shareholders' equity</div>
+                  <div class="sa-tip">Return on Equity = Net Income ÷ Shareholders' Equity × 100. &gt;15% is considered good. Shows how efficiently management generates profit.</div>
+                </div>
+                <div class="sa-fund-item sa-tooltip">
+                  <div class="sa-fund-label">Debt/Eq <span class="info-icon">?</span></div>
+                  <div class="sa-fund-value" id="statDebt">—</div>
+                  <div class="sa-fund-desc">Financial leverage risk</div>
+                  <div class="sa-tip">Debt-to-Equity = Total Debt ÷ Total Equity. Lower is safer. &lt;1x is ideal for non-banks. High D/E = more financial risk during downturns.</div>
+                </div>
+                <div class="sa-fund-item sa-tooltip">
+                  <div class="sa-fund-label">P/B Ratio <span class="info-icon">?</span></div>
+                  <div class="sa-fund-value" id="statPB">—</div>
+                  <div class="sa-fund-desc">Price vs. book value of assets</div>
+                  <div class="sa-tip">Price-to-Book = Stock Price ÷ Book Value Per Share. &lt;3x is reasonable. &gt;6x can indicate an overvalued stock. Best compared within same sector.</div>
+                </div>
+              </div>
+              <div class="sa-legend">
+                <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#00d68f"></div> Healthy</div>
+                <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#f0c040"></div> Average</div>
+                <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#ff6b6b"></div> Caution</div>
+                <div class="sa-legend-item"><div class="sa-legend-dot" style="background:#888"></div> N/A</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ PRICE CHART ═══ -->
+          <div style="margin-top:1.2rem">
+            <div class="sa-section-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              Price History
+            </div>
+            <div class="sa-chart-card">
+              <div class="sa-chart-header">
+                <span class="sa-chart-title">Price Trend</span>
+                <div class="sa-chart-tabs chart-tabs">
+                  <button class="chart-tab sa-chart-tab active" data-range="7d">7D</button>
+                  <button class="chart-tab sa-chart-tab" data-range="1m">1M</button>
+                  <button class="chart-tab sa-chart-tab" data-range="3m">3M</button>
+                </div>
+              </div>
+              <div class="sa-chart-canvas">
+                <canvas id="stockChart" height="120"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ ADVANCED TECHNICALS ═══ -->
+          <div style="margin-top:1.2rem">
+            <div class="sa-section-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Advanced Technicals
+              <span style="font-size:0.65rem; color:#6e7681; font-weight:400; text-transform:none; letter-spacing:0; margin-left:auto; background:rgba(255,255,255,0.06); padding:2px 8px; border-radius:6px;">Calculated from 90-day DB history</span>
+            </div>
+            <div class="sa-tech-card">
+              <div class="sa-tech-grid">
+                <div class="sa-tech-item sa-tooltip">
+                  <div class="sa-tech-name">14-Day RSI</div>
+                  <div id="techRSI" style="font-size:1.3rem; font-weight:700; color:#fff; margin:0.3rem 0;">—</div>
+                  <div id="techRSIStatus" style="font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.08); color:#ccc; display:inline-block;">Neutral</div>
+                  <div class="sa-tech-detail">0–30 = Oversold · 30–70 = Neutral · 70–100 = Overbought</div>
+                  <div class="sa-tip">Relative Strength Index measures momentum. RSI &lt;30 suggests the stock may be oversold (potential buy), RSI &gt;70 may be overbought (potential sell).</div>
+                </div>
+                <div class="sa-tech-item sa-tooltip">
+                  <div class="sa-tech-name">20-Day EMA</div>
+                  <div id="techEMA20" style="font-size:1.3rem; font-weight:700; color:#fff; margin:0.3rem 0;">—</div>
+                  <div id="techEMA20Status" style="font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.08); color:#ccc; display:inline-block;">—</div>
+                  <div class="sa-tech-detail">Short-term trend indicator</div>
+                  <div class="sa-tip">Exponential Moving Average (20-day) tracks short-term price momentum. Price above EMA = bullish. Price below EMA = bearish short-term outlook.</div>
+                </div>
+                <div class="sa-tech-item sa-tooltip">
+                  <div class="sa-tech-name">50-Day EMA</div>
+                  <div id="techEMA50" style="font-size:1.3rem; font-weight:700; color:#fff; margin:0.3rem 0;">—</div>
+                  <div id="techEMA50Status" style="font-size:0.72rem; font-weight:600; padding:2px 8px; border-radius:4px; background:rgba(255,255,255,0.08); color:#ccc; display:inline-block;">—</div>
+                  <div class="sa-tech-detail">Medium-term trend indicator</div>
+                  <div class="sa-tip">50-day EMA smooths out noise to show the medium-term trend. A golden cross (20-EMA crossing above 50-EMA) is a strong bullish signal.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ AI SENTIMENT ═══ -->
+          <div style="margin-top:1.2rem">
+            <div class="sa-section-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+              AI Sentiment Score
+              <span class="sa-tooltip" style="margin-left:4px; cursor:help"><span class="info-icon">?</span><span class="sa-tip" style="width:220px">Derived from the stock's position within its 52-week high-low range. 0–45 = Bearish · 45–70 = Neutral · 70–100 = Bullish. Updated on each data refresh.</span></span>
+            </div>
+            <div class="sa-sentiment-card">
+              <div class="sentiment-track">
+                <div class="sentiment-fill" id="sentimentFill"></div>
+                <div class="sentiment-thumb" id="sentimentThumb"></div>
+              </div>
+              <div class="sentiment-labels">
+                <span>Bearish</span>
+                <span class="sentiment-value" id="sentimentValue"></span>
+                <span>Bullish</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- ═══ ABOUT ═══ -->
+          <div class="sa-about-card" style="margin-top:1.2rem">
+            <h4>About the Company</h4>
+            <p id="stockAbout"></p>
+          </div>
+
+          <!-- ═══ AI ENGINE + ACTIONS ═══ -->
+          <div style="margin-top:1.2rem">
+            <div class="sa-section-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              AI-Powered Analysis
+            </div>
+            <div class="sa-model-row" id="modelSelectorRow">
+              <label class="model-label">Model:</label>
+              <select class="model-dropdown" id="modelSelect" onchange="onModelChange()">
+                <optgroup label="Google Gemini">
+                  <option value="gemini-2.0-flash" data-provider="gemini">Gemini 2.0 Flash</option>
+                  <option value="gemini-2.0-flash-lite" data-provider="gemini">Gemini 2.0 Flash-Lite</option>
+                  <option value="gemini-1.5-pro" data-provider="gemini">Gemini 1.5 Pro</option>
+                  <option value="gemini-1.5-flash" data-provider="gemini">Gemini 1.5 Flash</option>
+                </optgroup>
+                <optgroup label="OpenAI">
+                  <option value="gpt-4o" data-provider="openai">GPT-4o</option>
+                  <option value="gpt-4o-mini" data-provider="openai">GPT-4o Mini</option>
+                  <option value="gpt-4-turbo" data-provider="openai">GPT-4 Turbo</option>
+                </optgroup>
+                <optgroup label="Anthropic">
+                  <option value="claude-sonnet-4-20250514" data-provider="claude">Claude Sonnet 4</option>
+                  <option value="claude-3-5-sonnet-20241022" data-provider="claude">Claude 3.5 Sonnet</option>
+                  <option value="claude-3-5-haiku-20241022" data-provider="claude">Claude 3.5 Haiku</option>
+                </optgroup>
+                <optgroup label="DeepSeek">
+                  <option value="deepseek-chat" data-provider="deepseek">DeepSeek V3</option>
+                  <option value="deepseek-reasoner" data-provider="deepseek">DeepSeek R1</option>
+                </optgroup>
+              </select>
+              <span class="model-key-status" id="modelKeyStatus"></span>
+            </div>
+            <div class="action-btns-row" style="margin-top:0.8rem">
+              <!-- Horizon & Risk selectors for Deep Research -->
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.6rem">
+                <select id="researchHorizon" style="background:rgba(15,18,35,0.8); border:1px solid rgba(255,255,255,0.1); color:#8b949e; border-radius:8px; padding:0.45rem 0.6rem; font-size:0.75rem; outline:none;">
+                  <option value="short term">⏱ Short Term (&lt;1yr)</option>
+                  <option value="medium term" selected>📅 Medium Term (1–3yr)</option>
+                  <option value="long term">🏆 Long Term (3yr+)</option>
+                </select>
+                <select id="researchRisk" style="background:rgba(15,18,35,0.8); border:1px solid rgba(255,255,255,0.1); color:#8b949e; border-radius:8px; padding:0.45rem 0.6rem; font-size:0.75rem; outline:none;">
+                  <option value="low">🛡 Low Risk</option>
+                  <option value="medium" selected>⚖️ Medium Risk</option>
+                  <option value="high">🚀 High Risk</option>
+                </select>
+              </div>
+              <button class="analyze-btn sa-btn sa-btn-analyze" id="analyzeBtn" onclick="handleAnalyze()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                Analyze Stock
+              </button>
+              <button class="research-btn sa-btn sa-btn-research" id="researchBtn" onclick="handleResearch()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                Deep Research
+              </button>
+            </div>
+          </div>
+
+          <!-- Analysis Panel -->
+          <div class="analysis-panel" id="analysisPanel" style="display:none">
+            <div class="analysis-header">
+              <h4 class="analysis-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                </svg>
+                Gemini AI Analysis
+              </h4>
+              <button class="reanalyze-btn" id="reanalyzeBtn" onclick="handleAnalyze()" title="Re-analyze">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Analysis Tabs -->
+            <div class="analysis-tabs" id="analysisTabs">
+              <button class="atab active" data-tab="fundamental">📊 Fundamental</button>
+              <button class="atab" data-tab="technical">📈 Technical</button>
+              <button class="atab" data-tab="sentiment">💭 Sentiment</button>
+              <button class="atab" data-tab="horizon">🎯 Horizon</button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="analysis-content" id="analysisContent">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Loading State -->
+          <div class="analysis-loading" id="analysisLoading" style="display:none">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">
+              <span>Analyzing with Gemini AI</span>
+              <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <p class="loading-sub">Running fundamental, technical, sentiment &amp; horizon analysis</p>
+          </div>
+
+          <!-- Error State -->
+          <div class="analysis-error" id="analysisError" style="display:none">
+            <span class="error-icon">⚠️</span>
+            <p id="analysisErrorMsg">Something went wrong. Please try again.</p>
+            <button class="retry-btn" onclick="handleAnalyze()">Retry</button>
+          </div>
+
+          <!-- ═══ RESEARCH PANEL ═══ -->
+          <div class="research-panel" id="researchPanel" style="display:none">
+            <div class="analysis-header research-header">
+              <h4 class="analysis-title research-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                </svg>
+                Web Research — Market Factors
+              </h4>
+              <button class="reanalyze-btn" onclick="handleResearch()" title="Re-research">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                </svg>
+              </button>
+            </div>
+            <div class="research-factors" id="researchFactors">
+              <!-- Populated by JS -->
+            </div>
+          </div>
+
+          <!-- Research Loading -->
+          <div class="analysis-loading" id="researchLoading" style="display:none">
+            <div class="loading-spinner research-spinner"></div>
+            <div class="loading-text">
+              <span>Researching from the web</span>
+              <span class="loading-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+            <p class="loading-sub">Fetching inflation, trends, liquidity, peer data &amp; more</p>
+          </div>
+
+          <!-- Research Error -->
+          <div class="analysis-error" id="researchError" style="display:none">
+            <span class="error-icon">⚠️</span>
+            <p id="researchErrorMsg">Research failed. Please try again.</p>
+            <button class="retry-btn" onclick="handleResearch()">Retry</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ INVESTCIRCLE PANEL ════ -->
+    <section class="panel ic-panel" id="panelInvestCircle" aria-label="InvestCircle" style="display:none;">
+
+      <!-- Hero Search Bar -->
+      <div class="ic-hero">
+        <div class="ic-hero-left">
+          <div class="ic-hero-title">
+            <span class="ic-logo-icon">🤝</span>
+            <div>
+              <h2 class="ic-title">InvestCircle</h2>
+              <p class="ic-subtitle">Find expert investors · Learn from the best · Build your circle</p>
+            </div>
+          </div>
+          <div class="ic-search-wrap">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="icSearch" placeholder="Search investors by name, skill, or certification…" oninput="icFilterExperts()" autocomplete="off"/>
+          </div>
+        </div>
+        <div class="ic-hero-stats">
+          <div class="ic-hero-stat"><span class="ic-hs-val">2,400+</span><span class="ic-hs-label">Verified Advisors</span></div>
+          <div class="ic-hero-stat"><span class="ic-hs-val">18K+</span><span class="ic-hs-label">Community Members</span></div>
+          <div class="ic-hero-stat"><span class="ic-hs-val">94K+</span><span class="ic-hs-label">Trade Insights Shared</span></div>
+        </div>
+      </div>
+
+      <!-- Filter Chips -->
+      <div class="ic-filters">
+        <span class="ic-filter-label">Filter:</span>
+        <div class="ic-filter-chips" id="icFilterChips">
+          <button class="ic-chip active" data-filter="all"        onclick="icSetFilter('all')">All</button>
+          <button class="ic-chip" data-filter="value"            onclick="icSetFilter('value')">📈 Value Investing</button>
+          <button class="ic-chip" data-filter="technical"        onclick="icSetFilter('technical')">📊 Technical</button>
+          <button class="ic-chip" data-filter="options"          onclick="icSetFilter('options')">⚡ F&amp;O</button>
+          <button class="ic-chip" data-filter="mutual"          onclick="icSetFilter('mutual')">🏦 Mutual Funds</button>
+          <button class="ic-chip" data-filter="quant"            onclick="icSetFilter('quant')">🤖 Quant/Algo</button>
+          <button class="ic-chip" data-filter="sebi"             onclick="icSetFilter('sebi')">🛡️ SEBI Verified</button>
+        </div>
+        <select class="ic-sort-select" onchange="icSetSort(this.value)">
+          <option value="followers">Sort: Most Followed</option>
+          <option value="returns">Sort: Highest Returns</option>
+          <option value="experience">Sort: Most Experienced</option>
+          <option value="winrate">Sort: Best Win Rate</option>
+        </select>
+      </div>
+
+      <!-- Main 2-column layout -->
+      <div class="ic-body">
+
+        <!-- LEFT: Expert Cards -->
+        <div class="ic-left">
+          <div class="ic-section-header">
+            <span class="ic-section-title">⭐ Featured Advisors</span>
+            <span class="ic-count" id="icCount">5 advisors</span>
+          </div>
+          <div class="ic-cards-grid" id="icCardsGrid">
+            <!-- rendered by JS -->
+          </div>
+        </div>
+
+        <!-- RIGHT: Community Feed -->
+        <div class="ic-right">
+
+          <!-- Trending Topics -->
+          <div class="ic-widget">
+            <div class="ic-widget-title">🔥 Trending in Community</div>
+            <div class="ic-trending-list">
+              <div class="ic-trend-item"><span class="ic-trend-tag">#GoldenCross</span><span class="ic-trend-count">234 posts</span></div>
+              <div class="ic-trend-item"><span class="ic-trend-tag">#NiftyOutlook</span><span class="ic-trend-count">189 posts</span></div>
+              <div class="ic-trend-item"><span class="ic-trend-tag">#BudgetStocks</span><span class="ic-trend-count">156 posts</span></div>
+              <div class="ic-trend-item"><span class="ic-trend-tag">#OptionsStrategy</span><span class="ic-trend-count">142 posts</span></div>
+              <div class="ic-trend-item"><span class="ic-trend-tag">#SIPLife</span><span class="ic-trend-count">98 posts</span></div>
+            </div>
+          </div>
+
+          <!-- Community Feed -->
+          <div class="ic-widget">
+            <div class="ic-widget-title">📡 Live Community Feed</div>
+            <div class="ic-feed" id="icFeed">
+              <!-- rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Post composer -->
+          <div class="ic-widget">
+            <div class="ic-widget-title">✍️ Share a Market Insight</div>
+            <div class="ic-compose">
+              <div class="ic-compose-avatar">Y</div>
+              <div class="ic-compose-right">
+                <textarea id="icComposeText" class="ic-compose-input" placeholder="Share a trade idea, market observation, or question…" rows="2"></textarea>
+                <div class="ic-compose-actions">
+                  <div class="ic-compose-tags">
+                    <button class="ic-tag-btn" onclick="icAddTag('#MarketCall')">📈 Call</button>
+                    <button class="ic-tag-btn" onclick="icAddTag('#Question')">❓ Question</button>
+                    <button class="ic-tag-btn" onclick="icAddTag('#Analysis')">📊 Analysis</button>
+                  </div>
+                  <button class="ic-post-btn" onclick="icPostInsight()">Post</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Expert Profile Modal -->
+      <div class="ic-profile-overlay" id="icProfileOverlay" onclick="if(event.target===this)icCloseProfile()" style="display:none;">
+        <div class="ic-profile-modal" id="icProfileModal">
+          <!-- rendered by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ════ TRADEDESK PANEL ════ -->
+    <section class="panel panel-tradinglab" id="panelTradingLab" aria-label="TradeDesk">
+
+      <!-- ── AI COACH FULL MODAL ── -->
+      <div id="tlCoachOverlay" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;" onclick="if(event.target===this)tlCloseAICoach()">
+        <div class="tl-coach-modal">
+          <div class="tl-coach-modal-header">
+            <div style="display:flex;align-items:center;gap:0.75rem;">
+              <span style="font-size:1.6rem;line-height:1;">🤖</span>
+              <div>
+                <div style="font-size:1rem;font-weight:800;color:#e6edf3;letter-spacing:-0.01em;">AI Trading Coach</div>
+                <div style="font-size:0.68rem;color:#4e5a6e;margin-top:2px;">SMA Crossovers · Portfolio Feedback · Live Market Signals</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:0.5rem;">
+              <button class="tl-coach-refresh-btn" onclick="tlRunAICoach()">↻ Refresh</button>
+              <button class="tl-coach-close-btn" onclick="tlCloseAICoach()">✕</button>
+            </div>
+          </div>
+          <div class="tl-coach-modal-body" id="tlCoachBody">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0.75rem;padding:3rem;color:#4e5a6e;">
+              <div class="tl-coach-spinner"></div>
+              <span style="font-size:0.8rem;">Analysing market data…</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TOP BAR ── -->
+      <div class="td-topbar">
+        <!-- Brand -->
+        <div class="td-brand">
+          <span class="td-brand-icon">📊</span>
+          <div>
+            <div class="td-brand-name">TradeDesk</div>
+            <div class="td-brand-tag">Paper Trading · No Real Money</div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="td-stats">
+          <div class="td-stat">
+            <span class="td-stat-label">Cash</span>
+            <span class="td-stat-val" id="tlCash">₹1,00,000</span>
+          </div>
+          <div class="td-stat-sep"></div>
+          <div class="td-stat">
+            <span class="td-stat-label">Invested</span>
+            <span class="td-stat-val" id="tlPortfolioValue">₹0</span>
+          </div>
+          <div class="td-stat-sep"></div>
+          <div class="td-stat">
+            <span class="td-stat-label">P&amp;L</span>
+            <span class="td-stat-val" id="tlPnL">₹0</span>
+          </div>
+          <div class="td-stat-sep"></div>
+          <div class="td-stat">
+            <span class="td-stat-label">Return</span>
+            <span class="td-stat-val" id="tlReturn">0.00%</span>
+          </div>
+        </div>
+
+        <!-- Tool Buttons -->
+        <div class="td-tools">
+          <button class="td-tool-btn td-tool-ai" id="tlAiCoachBtn" onclick="tlOpenAICoach()" title="AI Coach">
+            🤖 <span>Coach</span>
+          </button>
+          <button class="td-tool-btn td-tool-sizer" onclick="document.getElementById('tlSizerOverlay').style.display='flex'; tlCalcSizer()" title="Position Sizer">
+            📐 <span>Sizer</span>
+          </button>
+          <button class="td-tool-btn td-tool-alert" onclick="tlOpenAlerts()" title="Price Alerts">
+            🔔 <span>Alerts</span>
+            <span id="tlAlertBadge" style="display:none;" class="tl-alert-badge">0</span>
+          </button>
+          <button class="td-tool-btn td-tool-reset" onclick="tlConfirmReset()" title="Reset Portfolio">↺</button>
+        </div>
+      </div>
+
+      <!-- ── MOVERS TICKER (thin strip) ── -->
+      <div class="td-movers-strip">
+        <span class="td-movers-label green">▲ Gainers</span>
+        <div class="td-movers-pills" id="tlGainerPills">—</div>
+        <span class="td-movers-divider">|</span>
+        <span class="td-movers-label red">▼ Losers</span>
+        <div class="td-movers-pills" id="tlLoserPills">—</div>
+      </div>
+
+      <!-- ── SUB-TABS ── -->
+      <div class="td-tabs">
+        <button class="td-tab active" data-tab="watchlist" onclick="tlSwitchSub('watchlist')">Market</button>
+        <button class="td-tab" data-tab="dashboard"  onclick="tlSwitchSub('dashboard')">Analytics</button>
+        <button class="td-tab" data-tab="holdings"   onclick="tlSwitchSub('holdings')">Portfolio</button>
+        <button class="td-tab" data-tab="history"    onclick="tlSwitchSub('history')">Journal</button>
+        <button class="td-tab" data-tab="heatmap"    onclick="tlSwitchSub('heatmap')">Heatmap</button>
+      </div>
+
+      <!-- ── WATCHLIST / MARKET TAB ── -->
+      <div id="tlSubWatchlist" style="flex:1; overflow:hidden; display:flex; flex-direction:column;">
+
+        <!-- Search + Sector Row -->
+        <div class="td-search-row">
+          <div class="td-search-wrap">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input type="text" id="tlWlSearch" placeholder="Search stocks…" oninput="tlFilterWatchlist()" autocomplete="off"/>
+            <button id="tlWlSearchClear" onclick="tlClearSearch()" style="display:none;">✕</button>
+          </div>
+          <div class="td-sector-chips" id="tlWlSectors">
+            <button class="td-chip active" data-sector="All"        onclick="tlSetSector('All')">All</button>
+            <button class="td-chip" data-sector="Banking"           onclick="tlSetSector('Banking')">🏦 Banks</button>
+            <button class="td-chip" data-sector="IT"                onclick="tlSetSector('IT')">💻 IT</button>
+            <button class="td-chip" data-sector="Pharma"            onclick="tlSetSector('Pharma')">💊 Pharma</button>
+            <button class="td-chip" data-sector="Automobile"        onclick="tlSetSector('Automobile')">🚗 Auto</button>
+            <button class="td-chip" data-sector="FMCG"              onclick="tlSetSector('FMCG')">🛒 FMCG</button>
+            <button class="td-chip" data-sector="Metals"            onclick="tlSetSector('Metals')">⚒️ Metals</button>
+            <button class="td-chip" data-sector="Defence"           onclick="tlSetSector('Defence')">🛩️ Defence</button>
+            <button class="td-chip" data-sector="Power"             onclick="tlSetSector('Power')">⚡ Power</button>
+            <button class="td-chip" data-sector="NBFC"              onclick="tlSetSector('NBFC')">📈 NBFC</button>
+          </div>
+          <span class="td-wl-count" id="tlWlCount">Loading…</span>
+        </div>
+
+        <!-- Table -->
+        <div style="flex:1; overflow-y:auto; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.1) transparent;">
+          <div class="td-wl-head">
+            <span>Instrument</span>
+            <span>LTP</span>
+            <span>Chg %</span>
+            <span>52W H / L</span>
+            <span>Volume</span>
+            <span>Action</span>
+          </div>
+          <div id="tlWatchlistBody"></div>
+        </div>
+      </div>
+
+      <!-- ── DASHBOARD SUB-TAB ── -->
+      <div id="tlSubDashboard" style="display:none; padding:0.5rem 0">
+        <div id="tlDashGrid"></div>
+      </div>
+
+      <!-- ── HEATMAP SUB-TAB ── -->
+      <div id="tlSubHeatmap" style="display:none; flex:1; overflow-y:auto; padding:0.75rem 1rem; scrollbar-width:thin; scrollbar-color:rgba(255,255,255,0.1) transparent;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;flex-shrink:0;">
+          <div>
+            <div style="font-size:0.9rem;font-weight:800;color:#e6edf3;">🌡️ Sector Heatmap</div>
+            <div style="font-size:0.7rem;color:#4e5a6e;margin-top:2px;">Click any chip to open chart · Updates every 10s</div>
+          </div>
+          <button onclick="tlRenderHeatmap()" style="padding:0.3rem 0.8rem;border-radius:8px;border:1px solid rgba(255,255,255,0.1);background:rgba(124,140,248,0.1);color:#7c8cf8;font-size:0.72rem;font-weight:700;cursor:pointer;">↻ Refresh</button>
+        </div>
+        <div id="tlHeatmapGrid" class="tl-hm-grid"></div>
+      </div>
+
+      <!-- ── HOLDINGS SUB-TAB ── -->
+      <div id="tlSubHoldings" style="display:none">
+        <div style="padding:0.5rem 0">
+          <div id="tlHoldingsEmpty" class="tl-empty-state">
+            <span>📭</span>
+            <p>No holdings yet.<br>Buy stocks from the watchlist to start.</p>
+          </div>
+          <div class="tl-portfolio-table" id="tlPortfolioTable" style="display:none;">
+            <div class="tl-pt-head">
+              <span>Stock</span><span>Qty</span><span>Avg</span><span>LTP</span><span>P&amp;L</span><span></span>
+            </div>
+            <div id="tlHoldingsList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TRADE LOG SUB-TAB ── -->
+      <div id="tlSubHistory" style="display:none">
+        <div style="padding:0.5rem 0">
+          <div id="tlHistoryEmpty" class="tl-empty-state">
+            <span>📋</span>
+            <p>Your executed trades<br>will appear here.</p>
+          </div>
+          <div class="tl-history-table" id="tlHistoryTable" style="display:none;">
+            <div class="tl-ht-head">
+              <span>Time</span><span>Stock</span><span>B/S</span><span>Qty</span><span>Price</span>
+            </div>
+            <div id="tlHistoryList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Summary floating panel -->
+      <div class="tl-ai-summary" id="tlAiSummary" style="display:none;">
+        <div class="tl-ai-header">
+          <span>🤖 AI Trading Coach</span>
+          <button onclick="document.getElementById('tlAiSummary').style.display='none'">✕</button>
+        </div>
+        <div class="tl-ai-content" id="tlAiContent">Generating your analysis...</div>
+      </div>
+
+      <!-- ── PRICE ALERTS MODAL ── -->
+      <div class="tl-alerts-overlay" id="tlAlertsOverlay" onclick="if(event.target===this)tlCloseAlerts()" style="display:none;">
+        <div class="tl-alerts-modal">
+          <div class="tl-alerts-header">
+            <span>🔔 Price Alerts</span>
+            <button onclick="tlCloseAlerts()">✕</button>
+          </div>
+          <div class="tl-alerts-body">
+            <div class="tl-alerts-new">
+              <div class="tl-alerts-row">
+                <select id="tlAlertTicker" class="tl-alert-select">
+                  <option value="">Select Stock…</option>
+                </select>
+                <select id="tlAlertCondition" class="tl-alert-select">
+                  <option value="above">Price rises above ▲</option>
+                  <option value="below">Price falls below ▼</option>
+                </select>
+                <input type="number" id="tlAlertPrice" class="tl-alert-input" placeholder="Target ₹" step="0.5" />
+                <button class="tl-alert-add-btn" onclick="tlAddAlert()">+ Add Alert</button>
+              </div>
+            </div>
+            <div id="tlAlertsList" class="tl-alerts-list">
+              <div class="tl-empty-state"><span>🔕</span><p>No alerts set.<br>Add one above to get notified.</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── POSITION SIZER MODAL ── -->
+      <div class="tl-sizer-overlay" id="tlSizerOverlay" onclick="if(event.target===this)document.getElementById('tlSizerOverlay').style.display='none'" style="display:none;">
+        <div class="tl-sizer-modal">
+          <div class="tl-alerts-header">
+            <span>📐 Position Sizer</span>
+            <button onclick="document.getElementById('tlSizerOverlay').style.display='none'">✕</button>
+          </div>
+          <div style="padding:1.2rem; display:flex; flex-direction:column; gap:1rem;">
+            <p style="font-size:0.8rem; color:#8b949e; margin:0;">How much to risk per trade? Enter your risk tolerance and the tool calculates the ideal position size.</p>
+            <div class="tl-sizer-grid">
+              <label>Total Capital (₹)<input type="number" id="sizerCapital" value="100000" class="tl-sizer-input" oninput="tlCalcSizer()"/></label>
+              <label>Risk per Trade (%)<input type="number" id="sizerRisk" value="2" min="0.1" max="20" step="0.1" class="tl-sizer-input" oninput="tlCalcSizer()"/></label>
+              <label>Entry Price (₹)<input type="number" id="sizerEntry" placeholder="e.g. 1500" class="tl-sizer-input" oninput="tlCalcSizer()"/></label>
+              <label>Stop-Loss Price (₹)<input type="number" id="sizerSL" placeholder="e.g. 1440" class="tl-sizer-input" oninput="tlCalcSizer()"/></label>
+            </div>
+            <div class="tl-sizer-result" id="sizerResult">
+              <div class="tl-sizer-res-item"><span>Max Risk Amount</span><strong id="sizerRiskAmt">—</strong></div>
+              <div class="tl-sizer-res-item"><span>Risk per Share</span><strong id="sizerRiskPerShare">—</strong></div>
+              <div class="tl-sizer-res-item tl-sizer-highlight"><span>Suggested Qty</span><strong id="sizerQty">—</strong></div>
+              <div class="tl-sizer-res-item"><span>Total Investment</span><strong id="sizerInvest">—</strong></div>
+              <div class="tl-sizer-res-item"><span>% of Capital</span><strong id="sizerPct">—</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Buy/Sell Modal -->
+      <div class="tl-modal-overlay" id="tlModalOverlay" onclick="tlCloseModal()"></div>
+      <div class="tl-modal" id="tlModal">
+        <div class="tl-modal-header">
+          <div class="tl-modal-header-left">
+            <span id="tlModalAction" class="tl-modal-action-badge">BUY</span>
+            <span id="tlModalTitle">RELIANCE</span>
+          </div>
+          <button onclick="tlCloseModal()">✕</button>
+        </div>
+        <div class="tl-modal-body">
+          <div class="tl-modal-stock" id="tlModalStock"></div>
+          <div class="tl-modal-meta">
+            <div class="tl-modal-meta-item">
+              <span>Market Price</span>
+              <strong id="tlModalPrice">₹0</strong>
+            </div>
+            <div class="tl-modal-meta-item">
+              <span id="tlModalBalanceLabel">Available Cash</span>
+              <strong id="tlModalBalance">₹0</strong>
+            </div>
+          </div>
+          <div class="tl-qty-label">Quantity</div>
+          <div class="tl-qty-controls">
+            <button onclick="tlChangeQty(-10)">-10</button>
+            <button onclick="tlChangeQty(-1)">-1</button>
+            <input type="number" id="tlQtyInput" min="1" value="1" oninput="tlUpdateModalCost()">
+            <button onclick="tlChangeQty(1)">+1</button>
+            <button onclick="tlChangeQty(10)">+10</button>
+          </div>
+          <div class="tl-modal-total-row">
+            <span>Total Order Value</span>
+            <strong id="tlModalTotal">₹0</strong>
+          </div>
+          <!-- ── STOP-LOSS FIELD ── -->
+          <div class="tl-journal-label" id="tlSLWrap">
+            <label>Stop-Loss Price (₹) <span style="color:#4e5a6e;font-weight:400;font-size:0.7rem;">optional — for position sizer</span></label>
+            <input type="number" id="tlModalSL" class="tl-journal-input tl-sl-input" placeholder="e.g. 1440" step="0.5"/>
+          </div>
+          <!-- ── TRADE JOURNAL NOTE ── -->
+          <div class="tl-journal-label">
+            <label>Trade Rationale <span style="color:#4e5a6e;font-weight:400;font-size:0.7rem;">why are you making this trade?</span></label>
+            <textarea id="tlTradeNote" class="tl-journal-textarea" placeholder="e.g. Golden cross on 20/50 SMA, volume surge, breaking resistance..." rows="2" maxlength="300"></textarea>
+          </div>
+          <button class="tl-confirm-btn" id="tlConfirmBtn" onclick="tlExecuteTrade()">Confirm Buy</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ── PROFILE SLIDE-OUT PANEL ── -->
+  <div class="profile-overlay" id="profileOverlay" onclick="closeProfile()"></div>
+  <aside class="profile-panel" id="profilePanel">
+    <div class="profile-panel-header">
+      <h3>Your Profile</h3>
+      <button class="profile-close" onclick="closeProfile()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Basic Details & Preferences -->
+    <div class="profile-section">
+      <h4 class="profile-section-title">Account Details</h4>
+      <div class="profile-field">
+        <label for="profileName">Display Name</label>
+        <input type="text" id="profileName" class="profile-input" placeholder="Your name" />
+      </div>
+      
+      <div class="profile-field">
+        <label for="profileUserType">I am primarily a(n)</label>
+        <select id="profileUserType" class="profile-input">
+          <option value="investor">Investor (Long term, Wealth building)</option>
+          <option value="trader">Trader (Short term, Momentum, F&O)</option>
+        </select>
+      </div>
+
+      <div class="profile-field">
+        <label for="profileExperience">Experience Level</label>
+        <select id="profileExperience" class="profile-input">
+          <option value="beginner">Beginner (< 1 year)</option>
+          <option value="intermediate">Intermediate (1-5 years)</option>
+          <option value="expert">Expert (5+ years)</option>
+        </select>
+      </div>
+
+      <div style="display:flex; gap:10px;">
+        <div class="profile-field" style="flex:1;">
+          <label for="profileStyle">Primary Style</label>
+          <select id="profileStyle" class="profile-input">
+            <option value="value">Value</option>
+            <option value="growth">Growth</option>
+            <option value="technical">Technical/Swing</option>
+            <option value="algo">Algo/Quant</option>
+          </select>
+        </div>
+        <div class="profile-field" style="flex:1;">
+          <label for="profileRisk">Risk Tolerance</label>
+          <select id="profileRisk" class="profile-input">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- API Keys -->
+    <div class="profile-section">
+      <h4 class="profile-section-title">API Keys</h4>
+      <p class="profile-section-note">🔒 Keys are stored locally in your browser and never leave your device except to call the provider's API.</p>
+
+      <div class="api-key-card" data-provider="gemini">
+        <div class="api-key-header">
+          <span class="api-key-icon">✦</span>
+          <span class="api-key-provider">Google Gemini</span>
+          <span class="api-key-badge" id="badge-gemini"></span>
+        </div>
+        <div class="api-key-body">
+          <input type="password" class="api-key-input" id="key-gemini" placeholder="Paste Gemini API key" />
+          <a href="https://aistudio.google.com/apikey" target="_blank" class="api-key-link">Get key →</a>
+        </div>
+      </div>
+
+      <div class="api-key-card" data-provider="openai">
+        <div class="api-key-header">
+          <span class="api-key-icon">◉</span>
+          <span class="api-key-provider">OpenAI</span>
+          <span class="api-key-badge" id="badge-openai"></span>
+        </div>
+        <div class="api-key-body">
+          <input type="password" class="api-key-input" id="key-openai" placeholder="Paste OpenAI API key (sk-...)" />
+          <a href="https://platform.openai.com/api-keys" target="_blank" class="api-key-link">Get key →</a>
+        </div>
+      </div>
+
+      <div class="api-key-card" data-provider="claude">
+        <div class="api-key-header">
+          <span class="api-key-icon">◈</span>
+          <span class="api-key-provider">Anthropic (Claude)</span>
+          <span class="api-key-badge" id="badge-claude"></span>
+        </div>
+        <div class="api-key-body">
+          <input type="password" class="api-key-input" id="key-claude" placeholder="Paste Anthropic API key" />
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" class="api-key-link">Get key →</a>
+        </div>
+      </div>
+
+      <div class="api-key-card" data-provider="deepseek">
+        <div class="api-key-header">
+          <span class="api-key-icon">◆</span>
+          <span class="api-key-provider">DeepSeek</span>
+          <span class="api-key-badge" id="badge-deepseek"></span>
+        </div>
+        <div class="api-key-body">
+          <input type="password" class="api-key-input" id="key-deepseek" placeholder="Paste DeepSeek API key" />
+          <a href="https://platform.deepseek.com/api_keys" target="_blank" class="api-key-link">Get key →</a>
+        </div>
+      </div>
+    </div>
+
+    <button class="profile-save-btn" onclick="saveProfile()">Save Profile</button>
+    <p class="profile-saved-msg" id="profileSavedMsg"></p>
+  </aside>
+
+  <!-- ── API KEY MODAL (fallback for quick entry) ── -->
+  <div class="modal-overlay" id="apiKeyModal" style="display:none">
+    <div class="modal-card">
+      <div class="modal-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <h3 id="apiKeyModalTitle">Connect AI Provider</h3>
+      <p id="apiKeyModalDesc">Enter your API key to enable AI-powered stock analysis.</p>
+      <a href="#" id="apiKeyModalLink" target="_blank" class="modal-link">Get your free API key →</a>
+      <div class="modal-input-group">
+        <input type="password" id="apiKeyInput" class="modal-input" placeholder="Paste your API key" />
+        <button class="modal-save-btn" id="apiKeySaveBtn" onclick="saveApiKeyFromModal()">Save & Analyze</button>
+      </div>
+      <p class="modal-note">🔒 Stored locally in your browser. Never shared anywhere except the provider's API.</p>
+      <button class="modal-close" onclick="closeApiKeyModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ── DB REFRESH MODAL ── -->
+  <div class="refresh-modal-overlay" id="refreshModalOverlay" style="display:none">
+    <div class="refresh-modal">
+      <div class="refresh-modal-header">
+        <div class="refresh-modal-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Updating Database from Yahoo Finance</span>
+        </div>
+        <div class="refresh-modal-status" id="refreshModalStatus">Fetching…</div>
+      </div>
+      <div class="refresh-progress-bar"><div class="refresh-progress-fill" id="refreshProgressFill"></div></div>
+      <div class="refresh-log" id="refreshLog"></div>
+      <div class="refresh-modal-footer" id="refreshModalFooter" style="display:none">
+              <button class="refresh-done-btn" onclick="closeRefreshModal()">✅ Done — Reload Data</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MARKET ASSISTANT CHATBOT — ChromaDB-backed RAG (requires API key in Profile) ═══ -->
+  <!-- Floating Bot Icon Button -->
+  <button class="chatbot-fab" onclick="toggleChatbot()" title="Ask Market Assistant" id="chatbotFab">
+    <div class="chatbot-bot-icon">
+      <!-- Robot face SVG -->
+      <svg width="26" height="26" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Antenna -->
+        <line x1="32" y1="4" x2="32" y2="14" stroke="white" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="32" cy="4" r="3" fill="#c4b5fd"/>
+        <!-- Head -->
+        <rect x="10" y="14" width="44" height="32" rx="8" fill="white" fill-opacity="0.15" stroke="white" stroke-width="2"/>
+        <!-- Eyes -->
+        <rect x="18" y="23" width="9" height="7" rx="2" fill="#a78bfa"/>
+        <rect x="37" y="23" width="9" height="7" rx="2" fill="#a78bfa"/>
+        <!-- Mouth -->
+        <rect x="20" y="35" width="24" height="4" rx="2" fill="white" fill-opacity="0.5"/>
+        <!-- Body connector -->
+        <rect x="24" y="46" width="16" height="6" rx="3" fill="white" fill-opacity="0.2"/>
+      </svg>
+      <div class="chatbot-pulse"></div>
+    </div>
+    <span class="chatbot-fab-label">Ask Market Bot</span>
+  </button>
+
+
+  <!-- Chat Panel -->
+  <div class="chatbot-panel" id="chatbotPanel">
+    <div class="chatbot-header">
+      <div style="display:flex; align-items:center; gap:0.6rem">
+        <span style="font-size:1.1rem">📈</span>
+        <div>
+          <div style="font-size:0.85rem; font-weight:700; color:#e6edf3">Market Assistant</div>
+          <div style="font-size:0.65rem; color:#7c8cf8">ChromaDB RAG · Gemini Powered</div>
+        </div>
+      </div>
+      <button onclick="toggleChatbot()" style="background:none; border:none; color:#6e7681; cursor:pointer; font-size:1.2rem; padding:0.2rem 0.4rem; border-radius:6px;" title="Close">✕</button>
+    </div>
+
+    <!-- Mode Selector -->
+    <div class="chat-mode-container">
+      <button class="chat-mode-pill active" id="btnModeEdu" onclick="setChatMode('education')">📚 Education</button>
+      <button class="chat-mode-pill" id="btnModePred" onclick="setChatMode('prediction')">📈 Prediction</button>
+    </div>
+
+
+    <div class="chatbot-messages" id="chatMessages"></div>
+
+    <div class="chatbot-suggestions" id="chatSuggestions"></div>
+
+    <div class="chatbot-input-row">
+      <input type="text" id="chatInput" class="chatbot-input"
+        placeholder="Ask anything about stocks, ratios, investing…"
+        autocomplete="off" />
+      <button class="chatbot-voice" id="voiceInputBtn" title="Speak to Voice Agent">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+            <line x1="12" x2="12" y1="19" y2="22"></line>
+        </svg>
+      </button>
+      <button class="chatbot-send" onclick="sendChatMessage()" title="Send">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ════ ZERODHA-STYLE CHART MODAL ════ -->
+  <div class="tl-chart-overlay" id="cmOverlay" onclick="if(event.target===this) cmClose()">
+    <div class="tl-chart-modal">
+
+      <!-- Header -->
+      <div class="cm-header">
+        <div class="cm-stock-info">
+          <div class="cm-logo" id="cmLogo">📈</div>
+          <div class="cm-name">
+            <div class="cm-ticker" id="cmTicker">—</div>
+            <div class="cm-fullname" id="cmFullName">—</div>
+          </div>
+        </div>
+        <div class="cm-price-area">
+          <div class="cm-price" id="cmPrice">—</div>
+          <div class="cm-change" id="cmChange">—</div>
+        </div>
+        <button class="cm-close" onclick="cmClose()">✕</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="cm-toolbar">
+        <!-- Range tabs -->
+        <div class="cm-range-tabs">
+          <button class="cm-range-tab" data-range="7d"  onclick="cmSetRange('7d')">7D</button>
+          <button class="cm-range-tab" data-range="1m"  onclick="cmSetRange('1m')">1M</button>
+          <button class="cm-range-tab active" data-range="3m"  onclick="cmSetRange('3m')">3M</button>
+        </div>
+        <div class="cm-separator"></div>
+        <!-- Chart type -->
+        <div class="cm-type-tabs">
+          <button class="cm-type-tab active" data-type="area"   onclick="cmSetType('area')">Area</button>
+          <button class="cm-type-tab"        data-type="candle" onclick="cmSetType('candle')">Candle</button>
+          <button class="cm-type-tab"        data-type="line"   onclick="cmSetType('line')">Line</button>
+        </div>
+      </div>
+
+      <!-- Body: chart + sidebar -->
+      <div class="cm-body">
+
+        <!-- Chart area -->
+        <div class="cm-chart-area">
+          <!-- OHLC row -->
+          <div class="cm-ohlc-row" id="cmOHLCRow" style="font-size:0.7rem;color:#6e7681;margin-bottom:0.4rem;">
+            <span>Hover over chart for OHLC data</span>
+          </div>
+
+          <div class="cm-indicator-legend" id="cmIndLegend">
+            <div class="cm-ind-tag cm-ind-ma20"><span></span>SMA 20</div>
+            <div class="cm-ind-tag cm-ind-ma50"><span></span>SMA 50</div>
+          </div>
+
+          <!-- Main canvas -->
+          <div class="cm-canvas-wrap" style="flex:1; position:relative; min-height:240px;">
+            <canvas id="cmChart"></canvas>
+            <div class="cm-crosshair-label" id="cmCrosshairLabel"></div>
+            <div class="cm-no-data" id="cmNoData" style="display:none;">
+              <div class="cm-no-data-icon">📉</div>
+              <div class="cm-no-data-text">No price history loaded yet<br><small>Sync prices from Equity Screener</small></div>
+            </div>
+          </div>
+
+          <!-- Volume chart -->
+          <div class="cm-volume-wrap" style="margin-top:0.4rem;">
+            <canvas id="cmVolumeChart"></canvas>
+          </div>
+
+          <!-- Mini stats -->
+          <div class="cm-mini-stats">
+            <div class="cm-ms-item"><div class="cm-ms-label">52W High</div><div class="cm-ms-value" id="cmMSHigh52">—</div></div>
+            <div class="cm-ms-item"><div class="cm-ms-label">52W Low</div><div class="cm-ms-value" id="cmMSLow52">—</div></div>
+            <div class="cm-ms-item"><div class="cm-ms-label">Mkt Cap</div><div class="cm-ms-value" id="cmMSMktCap">—</div></div>
+            <div class="cm-ms-item"><div class="cm-ms-label">P/E</div><div class="cm-ms-value" id="cmMSPE">—</div></div>
+            <div class="cm-ms-item"><div class="cm-ms-label">Volume</div><div class="cm-ms-value" id="cmMSVol">—</div></div>
+            <div class="cm-ms-item"><div class="cm-ms-label">Period Chg</div><div class="cm-ms-value" id="cmMSPeriodChg">—</div></div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="cm-sidebar">
+
+          <div class="cm-sb-section">
+            <div class="cm-sb-title">Overview</div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">Sector</span><span class="cm-sb-stat-v" id="cmSbSector">—</span></div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">Exchange</span><span class="cm-sb-stat-v" id="cmSbExchange">—</span></div>
+          </div>
+
+          <div class="cm-sb-section">
+            <div class="cm-sb-title">Fundamentals</div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">P/E Ratio</span><span class="cm-sb-stat-v" id="cmSbPE">—</span></div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">P/B Ratio</span><span class="cm-sb-stat-v" id="cmSbPB">—</span></div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">EPS</span><span class="cm-sb-stat-v" id="cmSbEPS">—</span></div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">ROE</span><span class="cm-sb-stat-v" id="cmSbROE">—</span></div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">Debt/Eq</span><span class="cm-sb-stat-v" id="cmSbDE">—</span></div>
+            <div class="cm-sb-stat"><span class="cm-sb-stat-l">Div Yield</span><span class="cm-sb-stat-v" id="cmSbDivYield">—</span></div>
+          </div>
+
+          <div class="cm-sb-section">
+            <div class="cm-sb-title">AI Sentiment</div>
+            <div class="cm-ind-bar-bg" style="margin-bottom:4px;">
+              <div class="cm-ind-bar-fill" id="cmSentimentFill" style="width:50%;background:#f0c040;"></div>
+            </div>
+            <div style="font-size:0.72rem;color:#c9d1d9;font-weight:700;" id="cmSentimentLabel">Neutral ⚖️</div>
+          </div>
+
+          <!-- Trade buttons -->
+          <div class="cm-trade-row" style="margin-top:auto;">
+            <button class="cm-btn cm-btn-buy"  onclick="cmInitTrade('buy')">▲ BUY</button>
+            <button class="cm-btn cm-btn-sell" onclick="cmInitTrade('sell')">▼ SELL</button>
+          </div>
+
+          <!-- Trade confirm panel -->
+          <div id="cmTradePanel" style="display:none; flex-direction:column; gap:0.6rem; margin-top:0.8rem; padding:0.8rem; background:rgba(15,18,35,0.9); border:1px solid rgba(255,255,255,0.1); border-radius:12px;">
+            <div style="font-size:0.85rem; font-weight:800;" id="cmTradeModeLabel">BUY</div>
+            <div style="font-size:0.75rem; color:#6e7681;">Price: <strong id="cmTradePrice" style="color:#e6edf3;">—</strong></div>
+            <div style="font-size:0.72rem;" id="cmTradeBalance"></div>
+            <div style="display:flex; align-items:center; gap:0.4rem;">
+              <button class="cm-confirm-qty-btn" onclick="cmChangeQty(-1)">−</button>
+              <input type="number" id="cmTradeQty" class="cm-confirm-qty-input" value="1" min="1" oninput="_cmUpdateTradeTotal()">
+              <button class="cm-confirm-qty-btn" onclick="cmChangeQty(1)">+</button>
+            </div>
+            <div style="font-size:0.72rem; color:#8b949e;" id="cmTradeTotal">Total: ₹0</div>
+            <input type="number" id="cmTradeSL" class="tl-sl-input" placeholder="Stop-Loss ₹ (optional)" step="0.5" style="margin-top:4px;"/>
+            <textarea id="cmTradeNote" class="tl-journal-textarea" placeholder="Trade rationale…" rows="2" maxlength="200"></textarea>
+            <button class="cm-confirm-execute buy" id="cmTradeExecuteBtn" onclick="cmExecuteTrade()">Confirm Buy</button>
+            <button class="cm-confirm-cancel" onclick="cmCancelTrade()">Cancel</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- ════ END CHART MODAL ════ -->
+
+  <script src="knowledge-base.js"></script>
+  <script src="app.js"></script>
+  <script src="trading-lab.js"></script>
+  <script src="tl-features.js"></script>
+  <script src="investcircle.js"></script>
+</body>
+
+</html>
