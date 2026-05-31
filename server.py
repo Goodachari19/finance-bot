@@ -5,6 +5,14 @@ Run with: python3 server.py
 Serves app at http://localhost:4000, DB API, and proxies Yahoo Finance.
 """
 
+# Override sqlite3 with pysqlite3 for ChromaDB compatibility on Render
+try:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    pass
+
 import http.server
 import urllib.request
 import urllib.error
