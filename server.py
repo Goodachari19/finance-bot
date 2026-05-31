@@ -23,7 +23,7 @@ import math
 import chromadb
 from sentence_transformers import SentenceTransformer
 
-PORT = 4000
+PORT = int(os.environ.get('PORT', 4000))
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH    = os.path.join(PROJECT_DIR, 'data', 'marketpulse.db')
 SCHEMA_PATH = os.path.join(PROJECT_DIR, 'db', 'schema.sql')
