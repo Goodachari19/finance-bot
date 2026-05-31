@@ -113,6 +113,11 @@ class RAGEngine:
             if self._ready:
                 return
 
+            if os.environ.get('RENDER') == 'true':
+                print("[RAG] ℹ️ Running on Render. Local embedding model disabled to save memory.", file=sys.stderr, flush=True)
+                self._ready = False
+                return
+
             print("[RAG] Lazy loading chromadb and sentence-transformers...")
             try:
                 import chromadb
