@@ -28,8 +28,6 @@ import time
 import re
 import html
 import math
-import chromadb
-from sentence_transformers import SentenceTransformer
 
 PORT = int(os.environ.get('PORT', 4000))
 PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -101,20 +99,10 @@ class RAGEngine:
 
     def __init__(self):
         self._docs = []  # Fallback for original API interface
-        # Setup ChromaDB persistent client and dual collections (Storage + Semantic Cache)
-        chroma_path = os.path.join(PROJECT_DIR, 'db', 'chroma_store')
-        self._chroma_client = chromadb.PersistentClient(path=chroma_path)
-        self._collection = self._chroma_client.get_or_create_collection(name="finbot_rag_collection")
-        self._cache = self._chroma_client.get_or_create_collection(name="finbot_semantic_cache")
-        
-        # Load local embedding model (free, no API keys needed)
-        try:
-            print("[RAG] Loading local embedding model (sentence-transformers)...")
-            self._embedder = SentenceTransformer('all-MiniLM-L6-v2')
-        except Exception as e:
-            print(f"[RAG] Failed to load local embedder: {e}")
-            self._embedder = None
-            
+        self._chroma_client = None
+        self._collection = None
+        self._cache = None
+        self._embedder = None
         self._ready   = False
         self._lock    = threading.Lock()
 
@@ -124,8 +112,39 @@ class RAGEngine:
         with self._lock:
             if self._ready:
                 return
+
+            print("[RAG] Lazy loading chromadb and sentence-transformers...")
+            try:
+                import chromadb
+                from sentence_transformers import SentenceTransformer
+            except Exception as e:
+                print(f"[RAG] ⚠️ RAG libraries could not be loaded: {e}", file=sys.stderr, flush=True)
+                self._ready = False
+                return
+
+            try:
+                chroma_path = os.path.join(PROJECT_DIR, 'db', 'chroma_store')
+                self._chroma_client = chromadb.PersistentClient(path=chroma_path)
+                self._collection = self._chroma_client.get_or_create_collection(name="finbot_rag_collection")
+                self._cache = self._chroma_client.get_or_create_collection(name="finbot_semantic_cache")
+            except Exception as e:
+                print(f"[RAG] ⚠️ ChromaDB initialization failed: {e}", file=sys.stderr, flush=True)
+                self._ready = False
+                return
+
+            # Load local embedding model (free, no API keys needed)
+            try:
+                print("[RAG] Loading local embedding model (sentence-transformers)...")
+                self._embedder = SentenceTransformer('all-MiniLM-L6-v2')
+            except Exception as e:
+                print(f"[RAG] Failed to load local embedder: {e}", file=sys.stderr, flush=True)
+                self._embedder = None
+                self._ready = False
+                return
+                
             if not self._embedder:
-                print('[RAG] ⚠️ Local Embedder not loaded — RAG engine inactive')
+                print('[RAG] ⚠️ Local Embedder not loaded — RAG engine inactive', file=sys.stderr, flush=True)
+                self._ready = False
                 return
                 
             print('[RAG] Building/Updating ChromaDB vector index…')
@@ -154,7 +173,8 @@ class RAGEngine:
                 self._ready = True
                 print(f'[RAG] ✅ ChromaDB Index ready — {self._collection.count()} docs in collection')
             except Exception as e:
-                print(f'[RAG] ⚠️ Embedding failed: {e}')
+                print(f'[RAG] ⚠️ Embedding failed: {e}', file=sys.stderr, flush=True)
+                self._ready = False
 
     def is_ready(self):
         return self._ready
@@ -164,10 +184,53 @@ class RAGEngine:
         if not self._ready:
             self.initialise(api_key)
 
+        # Fallback if RAG is NOT ready
         if not self._ready or not self._embedder:
-             return {'error': 'RAG Engine is not fully initialized.'}
+            print("[RAG] ⚠️ RAG engine is inactive/uninitialized. Falling back to direct model generation.", file=sys.stderr, flush=True)
+            context_parts = []
+            if stock_context:
+                context_parts.append(f"[Live Stock Data]\n{stock_context}")
+            context_str = '\n\n---\n\n'.join(context_parts)
 
-        # 1. Embed the query locally
+            if mode == 'prediction':
+                system_prompt = (
+                    "You are an elite quantitative AI stock market analyst for the Indian Market. "
+                    "The user is asking for price predictions, technical breakdowns, or analytical forecasts. "
+                    "HEAVILY prioritize analyzing the LIVE DATA provided over standard textbook definitions. "
+                    "Give a definitive bullish, bearish, or neutral thesis based on P/E ratios, 52-week trends, and fundamentals. "
+                    "Always include a disclaimer that you are not a licensed financial advisor."
+                )
+            else:
+                system_prompt = (
+                    "You are a knowledgeable, friendly stock market educator and analyst specializing in the Indian stock market (NSE/BSE). "
+                    "Your role is to answer investor questions clearly and honestly — from absolute beginners to advanced traders. "
+                    "Focus on teaching rules, policies, indicators, and market vocabulary. "
+                    "Format your response in clean markdown with bold for key terms, bullet points for lists, and plain language. "
+                    "Always end with a practical educational tip."
+                )
+
+            prompt = f"""CONTEXT DOCUMENTS:
+(No offline reference documents are available. Answer using your financial knowledge.)
+{context_str}
+
+---
+
+USER QUESTION: {query}
+
+Provide a comprehensive, accurate answer. Be helpful, educational, and India-market-specific."""
+
+            try:
+                answer_text = self._generate(prompt, system_prompt, api_key, model)
+                return {
+                    'answer': answer_text,
+                    'sources': ['Direct AI Generation (No local vector DB reference)'],
+                    'total_docs_searched': 0,
+                    'top_k_retrieved': 0
+                }
+            except Exception as e:
+                return {'error': f'Generation failed: {e}'}
+
+        # 1. Embed the query locally using loaded model
         try:
             q_vec = self._embedder.encode([query]).tolist()[0]
         except Exception as e:
