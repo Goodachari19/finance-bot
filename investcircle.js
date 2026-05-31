@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════
 // INVESTCIRCLE — Investor Community & Advisor Marketplace
 // ═══════════════════════════════════════════════════════════
-
+const API_BASE = window.API_BASE_URL || '';
 let IC_EXPERTS = [];
 let IC_FEED_POSTS = [];
 
@@ -14,8 +14,8 @@ let icConnected    = {};
 async function icFetchData() {
   try {
     const [expRes, postRes] = await Promise.all([
-      fetch('/api/ic/experts'),
-      fetch('/api/ic/posts')
+      fetch(API_BASE + '/api/ic/experts'),
+      fetch(API_BASE + '/api/ic/posts')
     ]);
     
     const expData = await expRes.json();
@@ -70,6 +70,7 @@ function icFormatTime(ts) {
 }
 
 // ── View Switch Hook ──────────────────────────────────────
+
 document.addEventListener('DOMContentLoaded', () => {
   const orig = window.switchView;
   window.switchView = function(view) {
@@ -244,7 +245,7 @@ window.icPostInsight = async function() {
     const authorName = profile.name || 'You';
     const authorRole = profile.user_type === 'trader' ? 'Trader' : 'Investor';
 
-    const res = await fetch('/api/ic/posts', {
+    const res = await fetch(API_BASE + '/api/ic/posts', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

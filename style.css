@@ -3349,10 +3349,89 @@ canvas#stockChart {
   overflow-y: auto;
   flex: 1;
 }
-.tl-ai-content strong { color: var(--text-primary); }
+.tl-ai-content strong { color: var(--text-primary); }}
 
+/* ════════════════════════════════════════
+   MOBILE RESPONSIVENESS
+   ════════════════════════════════════════ */
+@media (max-width: 900px) {
+  body {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .main-layout {
+    height: auto;
+    overflow: visible;
+    flex-direction: column;
+  }
+  
+  .main-layout.split-view {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .panel, .panel-news, .panel-stock, .panel-trading-lab, .panel-ic {
+    height: auto;
+    min-height: 60vh;
+    max-height: 90vh;
+    width: 100%;
+    margin-bottom: 1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
 
+  .navbar {
+    height: auto;
+    flex-wrap: wrap;
+    padding: 0.8rem 1rem;
+    gap: 1rem;
+  }
+  
+  .navbar-center {
+    order: 3;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+  
+  .navbar-right {
+    gap: 0.5rem;
+  }
 
+  .top-nav-bar {
+    height: auto;
+    padding: 0.5rem;
+  }
+  
+  .view-tabs {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+  
+  .view-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
 
+  /* Adjust panel headers for mobile */
+  .panel-header {
+    padding: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .tl-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    height: auto;
+  }
+  .tl-sidebar, .tl-main {
+    height: auto;
+    min-height: 50vh;
+  }
+}
 
 

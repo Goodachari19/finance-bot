@@ -97,7 +97,8 @@ let STOCKS = STOCK_METADATA.map(m => ({
 // DATA SOURCE: DB-first, YF fallback
 // ═══════════════════════════════════════
 const YF_PROXY = 'https://query1.finance.yahoo.com/v8/finance/chart/';
-const DB_API   = '/api/db';
+const API_BASE = window.API_BASE_URL || '';
+const DB_API   = API_BASE + '/api/db';
 
 function formatMarketCap(val) {
     if (!val || isNaN(val)) return '—';
@@ -238,7 +239,7 @@ async function loadIndicesFromDB() {
 const CORS_PROXIES = [
     url => {
         const yfPath = url.replace('https://query1.finance.yahoo.com', '');
-        return `/api/yf${yfPath}`;
+        return `${API_BASE}/api/yf${yfPath}`;
     },
     url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
     url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
@@ -396,6 +397,48 @@ async function loadAllLiveData() {
     }
 
     console.log('[FinanceBOT] Data ready for', STOCKS.filter(s => s._loaded).length, '/', STOCKS.length, 'stocks');
+
+    // Initialize Real-time Data Polling (replaces Synthetic tick engine)
+    if (!window._tlLivePollingStarted) {
+        window._tlLivePollingStarted = true;
+        setInterval(async () => {
+            // Silently poll 4 random stocks every 15s to update prices without rate limiting
+            const batch = [];
+            for (let i = 0; i < 4; i++) {
+                const idx = Math.floor(Math.random() * STOCK_METADATA.length);
+                batch.push(fetchLiveStockData(idx));
+            }
+            await Promise.all(batch);
+            
+            // Also update one random index
+            const indices = ['^NSEI', '^BSESN', '^NSEBANK', '^INDIAVIX'];
+            const randomIdx = indices[Math.floor(Math.random() * indices.length)];
+            const idMap = { '^NSEI': 'nifty', '^BSESN': 'sensex', '^NSEBANK': 'banknifty', '^INDIAVIX': 'indiavix' };
+            try {
+                const url  = `${YF_PROXY}${randomIdx}?interval=1d&range=1d`;
+                const json = await fetchWithProxy(url);
+                const r    = json?.chart?.result?.[0];
+                if (r) {
+                    const price = r.meta.regularMarketPrice;
+                    const prevClose = r.meta.chartPreviousClose ?? r.meta.previousClose ?? price;
+                    const change = price - prevClose;
+                    const changePct = (change / prevClose) * 100;
+                    const isUp = change >= 0;
+                    const idxId = idMap[randomIdx];
+                    const priceEl = document.getElementById(`idx-${idxId}-price`);
+                    const changeEl = document.getElementById(`idx-${idxId}-change`);
+                    if (priceEl && changeEl) {
+                        priceEl.textContent = idxId === 'indiavix' ? price.toFixed(4) : price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        changeEl.textContent = `${isUp ? '▲' : '▼'} ${Math.abs(change).toFixed(2)} (${Math.abs(changePct).toFixed(2)}%)`;
+                    }
+                }
+            } catch(e) {}
+
+            // Trigger DOM update + flashes
+            if (window.tlUpdateLivePricesDOM) window.tlUpdateLivePricesDOM();
+        }, 15000);
+        console.log('[FinanceBOT] 🚀 Live background polling started (15s interval)');
+    }
 }
 
 
@@ -441,7 +484,7 @@ async function fetchLiveNews(forceFilter, bypassCache = false) {
     }
 
     try {
-        const url = bypassCache ? '/api/news?force=1' : '/api/news';
+        const url = bypassCache ? API_BASE + '/api/news?force=1' : API_BASE + '/api/news';
         const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
         const data = await res.json();
         if (!data.articles || data.articles.length === 0) throw new Error('No articles');
@@ -1350,6 +1393,16 @@ function getApiKey() {
     return getApiKeyFor(getSelectedProvider());
 }
 
+// ── About Modal Toggle ──
+function toggleAboutModal() {
+    const modal = document.getElementById('aboutModal');
+    if (modal) modal.classList.add('open');
+}
+function closeAboutModal() {
+    const modal = document.getElementById('aboutModal');
+    if (modal) modal.classList.remove('open');
+}
+
 // ── Profile Panel Toggle ──
 function toggleProfile() {
     const panel = document.getElementById('profilePanel');
@@ -1396,7 +1449,7 @@ function saveProfile() {
     saveProfileData(profileData);
 
     // Sync to backend asynchronously
-    fetch('/api/profile', {
+    fetch(API_BASE + '/api/profile', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(profileData)
@@ -2035,7 +2088,7 @@ function init() {
 
     // ── Profile & Model Init ──
     // Fetch profile from backend
-    fetch('/api/profile')
+    fetch(API_BASE + '/api/profile')
         .then(res => res.json())
         .then(data => {
             if (data.profile) {
@@ -2123,7 +2176,7 @@ async function triggerDBRefresh() {
     addLine('⏳ Connecting to Yahoo Finance…', 'dim');
 
     try {
-        const res = await fetch('/api/db/refresh', {
+        const res = await fetch(API_BASE + '/api/db/refresh', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
         });
@@ -2337,7 +2390,7 @@ async function generateChatResponse(query) {
 
     // 3. Call the RAG backend
     try {
-        const res = await fetch('/api/chat', {
+        const res = await fetch(API_BASE + '/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -2802,7 +2855,7 @@ async function tlExecuteTrade() {
 
 async function tlPersistTrade(trade) {
     try {
-        await fetch('/api/trade', {
+        await fetch(API_BASE + '/api/trade', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(trade)
@@ -3004,7 +3057,7 @@ IMPORTANT:
 
     // ── Call backend ───────────────────────────────────────────
     try {
-        const res = await fetch('/api/chat', {
+        const res = await fetch(API_BASE + '/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

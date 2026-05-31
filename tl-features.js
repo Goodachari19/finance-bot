@@ -12,91 +12,10 @@
 // FEATURE 1 — INTRADAY TICK ENGINE
 // Replaces flat price with GARCH-style random walk
 // ═══════════════════════════════════════════════════════════
-(function initTickEngine() {
-    const TICK_MS  = 3000;   // tick every 3s
-    const SIGMA    = 0.0012; // base volatility per tick
-    let   _vol     = {};     // per-stock rolling volatility
-
-    function _tick() {
-        if (!window.STOCKS) return;
-        STOCKS.forEach(s => {
-            if (!s._loaded || !s.price) return;
-
-            // GARCH-like: vol persists + mean-reversion
-            _vol[s.ticker] = _vol[s.ticker] || SIGMA;
-            const shock  = (Math.random() - 0.49) * 2;       // slight upward drift
-            const newVol = Math.max(0.0005, Math.min(0.004,
-                0.85 * _vol[s.ticker] + 0.15 * SIGMA * (1 + Math.abs(shock))));
-            _vol[s.ticker] = newVol;
-
-            const pctMove  = shock * newVol;
-            const newPrice = +(s.price * (1 + pctMove)).toFixed(2);
-            const baseP    = s._basePrice || s.price;
-
-            s.price     = newPrice;
-            s.change    = +(newPrice - baseP).toFixed(2);
-            s.changePct = +((s.change / baseP) * 100).toFixed(2);
-
-            // Push to priceHistory['7d'] ring buffer (keep last 100 ticks)
-            if (!s._tickHistory) s._tickHistory = [];
-            s._tickHistory.push(newPrice);
-            if (s._tickHistory.length > 200) s._tickHistory.shift();
-
-            // Append to priceHistory for chart
-            if (s.priceHistory) {
-                ['7d','1m','3m'].forEach(k => {
-                    if (s.priceHistory[k] && s.priceHistory[k].length) {
-                        s.priceHistory[k].push(newPrice);
-                        if (s.priceHistory[k].length > 400) s.priceHistory[k].shift();
-                    }
-                });
-            }
-        });
-
-        // Re-render watchlist row prices (lightweight DOM update)
-        _patchPriceDOM();
-        // Check stop-loss triggers
-        _checkStopLosses();
-        // Check price alerts
-        if (typeof _checkAlerts === 'function') _checkAlerts();
-    }
-
-    function _patchPriceDOM() {
-        document.querySelectorAll('.tl-wl-row[data-ticker]').forEach(row => {
-            const ticker = row.dataset.ticker;
-            const s = STOCKS.find(x => x.ticker === ticker);
-            if (!s || !s.price) return;
-            const priceEl = row.querySelector('.tl-wl-price');
-            const chgEl   = row.querySelector('.tl-wl-chg');
-            if (priceEl) priceEl.textContent = '₹' + s.price.toLocaleString('en-IN', { maximumFractionDigits: 2 });
-            if (chgEl) {
-                const up = s.changePct >= 0;
-                chgEl.textContent = (up ? '▲ ' : '▼ ') + Math.abs(s.changePct).toFixed(2) + '%';
-                chgEl.className = 'tl-wl-chg ' + (up ? 'up' : 'down');
-            }
-        });
-        // Update movers ribbon
-        if (typeof tlUpdateMovers === 'function') tlUpdateMovers();
-    }
-
-    // Store base price once loaded
-    function _startEngine() {
-        if (window._tlEngineStarted) return;
-        window._tlEngineStarted = true;
-        console.log('[TickEngine] 🚀 Initializing...');
-        setTimeout(() => {
-            STOCKS.forEach(s => { if (s.price) s._basePrice = s.price; });
-            setInterval(_tick, TICK_MS);
-            console.log('[TickEngine] ✅ Heartbeat active');
-        }, 2000);
-    }
-
-    if (document.readyState === 'complete' || document.readyState === 'interactive') {
-        _startEngine();
-    } else {
-        document.addEventListener('DOMContentLoaded', _startEngine);
-    }
-})();
+// ═══════════════════════════════════════════════════════════
+// FEATURE 1 — INTRADAY TICK ENGINE
+// Removed: Real-time data is now polled directly from the backend.
+// ═══════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════
 // FEATURE 2 — TRADE JOURNALING
@@ -246,25 +165,8 @@ function _getPrices(s) {
     if (p7d && p7d.length >= 20) return p7d;
     if (s._tickHistory && s._tickHistory.length >= 20) return s._tickHistory;
 
-    // Synthetic fallback: generate 60-point history from current price
-    // Uses stock's 52W high/low to define realistic volatility
-    if (!s.price || s.price <= 0) return [];
-    const cache = s._synthHistory;
-    if (cache && cache[0] === s.price) return cache[1]; // memoize
-
-    const hi = parseFloat(s.high52) || s.price * 1.15;
-    const lo = parseFloat(s.low52)  || s.price * 0.85;
-    const vol = (hi - lo) / (lo * 60); // per-bar volatility estimate
-    const prices = [];
-    let p = s.price;
-    // Walk backwards from current price
-    for (let i = 0; i < 60; i++) {
-        prices.unshift(+p.toFixed(2));
-        p = p / (1 + (Math.random() - 0.5) * vol * 2);
-        p = Math.max(lo * 0.98, Math.min(hi * 1.02, p));
-    }
-    s._synthHistory = [s.price, prices]; // memoize
-    return prices;
+    // Synthetic fallback removed per user request for strict real-time data
+    return [];
 }
 
 function _detectCrossovers() {
@@ -590,9 +492,8 @@ setInterval(() => {
 // FEATURE 6 — PRICE FLASH + SPARKLINE UPDATE ON TICK
 // ═══════════════════════════════════════════════════════════
 (function initInteractivity() {
-    // Override _patchPriceDOM from tick engine with flash animations
-    const _origPatch = window._patchPriceDOM;
-    window._patchPriceDOM_withFlash = function() {
+    // Expose DOM update function for real-time polling to call
+    window.tlUpdateLivePricesDOM = function() {
         document.querySelectorAll('.tl-wl-row[data-ticker]').forEach(row => {
             const ticker = row.dataset.ticker;
             const s = STOCKS.find(x => x.ticker === ticker);
@@ -627,23 +528,10 @@ setInterval(() => {
         if (typeof tlUpdateMovers === 'function') tlUpdateMovers();
         // Update P&L with smooth animation
         _animateStats();
+        // Check alerts
+        if (typeof _checkStopLosses === 'function') _checkStopLosses();
+        if (typeof _checkAlerts === 'function') _checkAlerts();
     };
-
-    // Patch the tick engine's DOM update
-    const tickInterval = setInterval(() => {
-        if (typeof STOCKS !== 'undefined') {
-            // Override the tick engine's _patchPriceDOM reference
-            clearInterval(tickInterval);
-        }
-    }, 500);
-
-    // Hook into each tick cycle by monkey-patching the interval trigger
-    // We re-attach after first tick engine loads
-    setTimeout(() => {
-        // Patch priceDOM directly by overriding the function in the closure
-        // The tick engine calls _patchPriceDOM() — we shadow it
-        window._patchPriceDOM = window._patchPriceDOM_withFlash;
-    }, 3000);
 })();
 
 // ═══════════════════════════════════════════════════════════
